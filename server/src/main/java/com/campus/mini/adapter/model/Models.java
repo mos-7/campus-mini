@@ -23,8 +23,22 @@ public final class Models {
         }
     }
 
-    /** 凭据校验结果。 */
+    /**
+     * 凭据校验结果。
+     *
+     * @param displayName 账号的<b>可读标识</b>（学号、姓名…）。
+     *                    ⚠️ 它会作为绑定的 {@code accountLabel} 存下来，
+     *                    而 {@code BindingService.resolveCredential} <b>把它当成登录用户名</b>
+     *                    传回适配器。所以这里只能是账号标识，<b>绝不能放提示消息</b>
+     *                    —— 踩过：曾经塞了"登录成功（课表暂时没解析出条目）"，
+     *                    之后同步就拿着这句话去登录，必然失败且很难查。
+     * @param message     给人看的提示。
+     */
     public record VerifyResult(boolean ok, String displayName, String message) {
+
+        public static VerifyResult ok(String displayName, String message) {
+            return new VerifyResult(true, displayName, message);
+        }
 
         public static VerifyResult ok(String displayName) {
             return new VerifyResult(true, displayName, "验证通过");

@@ -130,10 +130,14 @@ public class MobileJwAdapter implements CampusAdapter, RawProbe {
         try {
             Session session = open(credential);
             List<CourseSession> sessions = fetchSessions(session);
+            // displayName 传 null：账号标识由用户填的学号来定（见 BindingService.bind）。
+            // 这里只给人类提示，别把消息塞进 displayName。
             if (sessions.isEmpty()) {
-                return VerifyResult.ok("登录成功（课表暂时没解析出条目，稍后同步看看）");
+                return VerifyResult.ok(null,
+                        "登录成功，但课表没解析出条目 —— 字段映射可能还没对上。"
+                                + "可以先绑定，然后用调试接口看原始响应。");
             }
-            return VerifyResult.ok("登录成功，解析到 " + sessions.size() + " 条上课安排");
+            return VerifyResult.ok(null, "登录成功，解析到 " + sessions.size() + " 条上课安排");
         } catch (AdapterException e) {
             return VerifyResult.fail(e.getMessage());
         }
@@ -161,12 +165,24 @@ public class MobileJwAdapter implements CampusAdapter, RawProbe {
         return new FetchResult(courses, sessions, message);
     }
 
-    /** 联调用：把课表接口的原始响应吐出来，用来确认字段名。 */
+    /**
+     * 联调用：把课表接口的原始响应吐出来，用来确认字段名。
+     *
+     * <p><b>这个方法不抛异常</b> —— 探测失败时把错误当成"内容"返回。
+     * 否则异常会走全局异常处理，响应信封的 {@code data} 变成 null，
+     * 调用方（比如联调脚本）只能看到一个空 data，看不到原因。<b>踩过。</b>
+     */
     @Override
     public String probeRaw(Credential credential) {
-        Session session = open(credential);
-        String raw = callApi(cfg().getCurriculumPath(), curriculumParams(), session.token());
-        return raw.length() > 6000 ? raw.substring(0, 6000) + "\n…（已截断，共 " + raw.length() + " 字符）" : raw;
+        try {
+            Session session = open(credential);
+            String raw = callApi(cfg().getCurriculumPath(), curriculumParams(), session.token());
+            return raw.length() > 6000
+                    ? raw.substring(0, 6000) + "\n…（已截断，共 " + raw.length() + " 字符）"
+                    : raw;
+        } catch (RuntimeException e) {
+            return "[探测失败] " + e.getClass().getSimpleName() + ": " + e.getMessage();
+        }
     }
 
     // ------------------------------------------------------------------

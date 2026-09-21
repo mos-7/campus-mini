@@ -118,9 +118,14 @@ public class BindingService {
             return result;
         }
 
-        String label = result.displayName() != null && !result.displayName().isBlank()
-                ? result.displayName()
-                : (username == null || username.isBlank() ? adapter.name() : username);
+        // ★ accountLabel 会被 resolveCredential 当成【登录用户名】用，
+        //   所以必须优先存用户填的那个账号，而不是适配器返回的提示消息。
+        //   踩过这个坑：适配器把"登录成功…"塞进 displayName，之后同步就拿这句话去登录。
+        String label = username != null && !username.isBlank()
+                ? username.trim()
+                : (result.displayName() != null && !result.displayName().isBlank()
+                        ? result.displayName()
+                        : adapter.name());
 
         store.saveBinding(userId, adapter.code(), adapter.loginMode().name(),
                 label, vault.encrypt(secret));

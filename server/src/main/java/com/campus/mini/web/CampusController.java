@@ -76,7 +76,14 @@ public class CampusController {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("ok", result.ok());
         data.put("message", result.message());
-        data.put("accountLabel", result.displayName());
+        // ★ 返回【实际存下来的】accountLabel，而不是 result.displayName()。
+        //   accountLabel 决定后续同步用哪个用户名登录，把它回显出来便于一眼确认；
+        //   适配器的 displayName 现在可能是 null（它只该放可选的可读名）。
+        if (result.ok()) {
+            data.put("accountLabel", bindings.find(userId, request.adapterCode())
+                    .map(b -> b.accountLabel())
+                    .orElse(null));
+        }
         return ApiResponse.ok(data);
     }
 

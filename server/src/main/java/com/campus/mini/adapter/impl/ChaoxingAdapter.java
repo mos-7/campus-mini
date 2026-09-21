@@ -104,7 +104,7 @@ public class ChaoxingAdapter implements CampusAdapter {
             if (courses.isEmpty()) {
                 return VerifyResult.fail("登录成功，但这个账号下没查到课程。");
             }
-            return VerifyResult.ok("登录成功，查到 " + courses.size() + " 门课");
+            return VerifyResult.ok(null, "登录成功，查到 " + courses.size() + " 门课");
         } catch (AdapterException e) {
             return VerifyResult.fail(e.getMessage());
         }
