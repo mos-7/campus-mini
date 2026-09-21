@@ -1,0 +1,29 @@
+# ---------- 后端 ----------
+server/build/
+server/.gradle/
+server/out/
+*.class
+*.jar
+!server/gradle/wrapper/gradle-wrapper.jar
+
+# ---------- 小程序 ----------
+miniprogram/node_modules/
+miniprogram/miniprogram_npm/
+miniprogram/.idea/
+
+# ---------- 编辑器 / 系统 ----------
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ---------- 密钥与本地配置（★ 绝对不要提交） ----------
+.env
+*.local.yml
+application-local.yml
+server.zip
+
+# 如果你哪天把主密钥写进了文件，这个兜底能救你一次
+*secret*
+*master-key*

@@ -1,0 +1,85 @@
+server:
+  port: ${PORT:8080}
+  # 云托管注意：容器只监听一个端口，务必和 Dockerfile 暴露的一致
+  shutdown: graceful
+
+spring:
+  application:
+    name: campus-api
+
+  # ---- 本地开发：H2 内存库 ----
+  # 生产（云托管 MySQL）：把 url/driver/username/password 换成环境变量注入，
+  # 并把 sql.init.mode 设为 never（表用 db/migration 里的脚本或手工建）。
+  datasource:
+    url: jdbc:h2:mem:campus;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  sql:
+    init:
+      mode: always
+      # ★ 必须显式指定 UTF-8！
+      # 不写的话，Java 17 会用【平台默认字符集】读这个脚本 —— 中文 Windows 上是 GBK，
+      # 于是 schema.sql 里的中文（公告内容）会变成乱码存进库里。
+      # 这个坑在 Linux 容器上更狠：没设 locale 的镜像默认是 ASCII。
+      encoding: UTF-8
+      schema-locations: classpath:schema.sql
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: Asia/Shanghai
+
+# ======================================================================
+# 本项目配置
+# ======================================================================
+campus:
+
+  # 校历。已按「移动教务」课表截图填好：第1周 周一 = 2026-09-07
+  #（截图表头：9月 / 周一7 周二8 周三9 周四10 周五11 周六12）
+  term:
+    # 第一周【周一】的日期。
+    # ★ 必须加引号！不加的话 SnakeYAML 会把它当成 YAML 日期对象，绑定到 LocalDate 会失败
+    start-date: "2026-09-07"
+    # ★ 待确认：截图里看不到总周数，20 是占位值。开学时学校会公布教学周历，拿到后改这里。
+    total-weeks: 20
+    # 课表网格一天几行
+    sections-per-day: 12
+    # 上午/下午、下午/晚上的分界节次（前端用来给网格分组上色）
+    noon-section: 4
+    evening-section: 8
+
+  # 凭据加密主密钥：32 字节 Base64，如 `openssl rand -base64 32`
+  # ★ 生产环境必须用环境变量 CAMPUS_MASTER_KEY 覆盖，绝不提交到代码库
+  master-key: ${CAMPUS_MASTER_KEY:}
+
+  # JWT 签名密钥
+  jwt-secret: ${CAMPUS_JWT_SECRET:}
+
+  # 启动时灌演示课表
+  demo-data: true
+
+  wechat:
+    # 云托管注入 openid 的请求头名。部署后可在服务日志里核对实际名字。
+    openid-header: x-wx-openid
+    # 本地开发用：允许请求体直接传 openid 登录。★ 生产必须设为 false
+    mock-enabled: true
+
+  # 超星适配器。★ 完成 docs/chaoxing.md 里的抓包确认后再改成 true
+  chaoxing:
+    enabled: false
+    login-url: https://passport2.chaoxing.com/fanyalogin
+    course-list-url: https://mooc1-api.chaoxing.com/mycourse/backclazzdata?view=json&rss=1
+
+logging:
+  level:
+    root: INFO
+    com.campus.mini: DEBUG
+    # 打开可以看到发往超星的请求；排查抓包对不上时很有用。
+    # ★ 注意：打开后日志里可能出现完整请求，别在公网环境长期开着
+    # com.campus.mini.adapter: TRACE

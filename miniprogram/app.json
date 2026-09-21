@@ -1,0 +1,30 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/schedule/schedule",
+    "pages/tools/tools",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "校园盒子",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f4f5f9"
+  },
+  "tabBar": {
+    "color": "#9aa0ac",
+    "selectedColor": "#6b5ce7",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/schedule/schedule", "text": "课表" },
+      { "pagePath": "pages/tools/tools", "text": "工具" },
+      { "pagePath": "pages/profile/profile", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

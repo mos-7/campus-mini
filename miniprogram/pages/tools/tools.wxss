@@ -1,0 +1,87 @@
+.page {
+  padding-top: 32rpx;
+}
+
+.intro {
+  padding: 0 48rpx 28rpx;
+}
+
+.intro-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+
+/* ---------- 功能网格 ---------- */
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 24rpx 12rpx;
+}
+
+.tile {
+  width: calc(50% - 24rpx);
+  margin: 0 12rpx 24rpx;
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 28rpx 24rpx;
+  position: relative;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 20rpx rgba(31, 34, 51, 0.04);
+}
+
+.tile-off {
+  opacity: 0.6;
+}
+
+.tile-icon {
+  font-size: 56rpx;
+  line-height: 1;
+  margin-bottom: 20rpx;
+}
+
+.tile-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+
+.tile-desc {
+  font-size: 22rpx;
+  color: #9aa0ac;
+}
+
+.tile-badge {
+  position: absolute;
+  top: 24rpx;
+  right: 20rpx;
+}
+
+/* ---------- 明确不做 ---------- */
+
+.not-planned-intro {
+  margin-bottom: 16rpx;
+  line-height: 1.7;
+}
+
+.np-row {
+  display: flex;
+  align-items: center;
+  padding: 18rpx 0;
+  border-top: 1rpx solid #f0f1f5;
+}
+
+.np-row:first-of-type {
+  border-top: none;
+}
+
+.np-icon {
+  font-size: 32rpx;
+  margin-right: 20rpx;
+}
+
+.np-text {
+  font-size: 28rpx;
+  color: #6b6b7b;
+}

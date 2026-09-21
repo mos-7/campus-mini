@@ -1,0 +1,118 @@
+<view class="page">
+
+  <!-- 周次切换 -->
+  <view class="weekbar">
+    <view class="weekbar-arrow" bindtap="prevWeek">‹</view>
+    <view class="weekbar-main" bindtap="backToCurrent">
+      <view class="weekbar-title">第 {{week}} 周</view>
+      <view class="muted">{{rangeText}}</view>
+    </view>
+    <view class="weekbar-arrow" bindtap="nextWeek">›</view>
+  </view>
+
+  <!-- 周次快捷选择 -->
+  <scroll-view class="chips" scroll-x enable-flex>
+    <view
+      wx:for="{{weekChips}}"
+      wx:key="w"
+      class="chip {{item.active ? 'chip-active' : ''}}"
+      data-week="{{item.w}}"
+      bindtap="pickWeek"
+    >{{item.w}}</view>
+  </scroll-view>
+
+  <view wx:if="{{loading}}" class="card">
+    <view class="empty"><view class="empty-desc">正在加载课表…</view></view>
+  </view>
+
+  <view wx:elif="{{error}}" class="card">
+    <view class="empty">
+      <view class="empty-icon">⚠️</view>
+      <view class="empty-title">加载失败</view>
+      <view class="empty-desc">{{error}}</view>
+      <button class="btn-primary" bindtap="backToCurrent">重试</button>
+    </view>
+  </view>
+
+  <block wx:else>
+
+    <!-- 演示数据横幅 -->
+    <view wx:if="{{demo}}" class="demo-banner" bindtap="goBind">
+      <view class="demo-banner-icon">👀</view>
+      <view class="demo-banner-body">
+        <view class="demo-banner-title">这是示例数据</view>
+        <view class="demo-banner-text">还没绑定学校平台，当前是示例课表。点这里去绑定 →</view>
+      </view>
+    </view>
+
+    <!-- 没课时给个明确出口，而不是一张空网格 -->
+    <view wx:if="{{!hasSessions}}" class="card">
+      <view class="empty">
+        <view class="empty-icon">🗓️</view>
+        <view class="empty-title">这一周没有课</view>
+        <view class="empty-desc">
+          要么是还没绑定平台，要么是校历配置（campus.term.start-date）和学校对不上。
+        </view>
+        <button class="btn-primary" bindtap="goBind">去绑定平台</button>
+      </view>
+    </view>
+
+    <view class="card grid-card">
+      <!-- 表头：星期 + 日期 -->
+      <view class="head">
+        <view class="axis-head">节</view>
+        <view class="days">
+          <view
+            wx:for="{{days}}"
+            wx:key="dayOfWeek"
+            class="day-head {{item.isToday ? 'day-head-today' : ''}}"
+          >
+            <view class="day-label">{{item.shortLabel}}</view>
+            <view class="day-date">{{item.date}}</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 网格本体 -->
+      <view class="grid">
+        <view class="axis">
+          <view
+            wx:for="{{rows}}"
+            wx:key="n"
+            class="axis-cell"
+            style="height:{{rowHeight}}rpx"
+          >{{item.n}}</view>
+        </view>
+
+        <view class="days">
+          <view
+            wx:for="{{days}}"
+            wx:key="dayOfWeek"
+            class="day-col {{item.isToday ? 'day-col-today' : ''}}"
+            style="height:{{gridHeight}}rpx"
+          >
+            <view
+              wx:for="{{item.blocks}}"
+              wx:for-item="b"
+              wx:key="key"
+              class="block"
+              style="top:{{b.top}}rpx;height:{{b.height}}rpx"
+              data-block="{{b}}"
+              bindtap="showBlock"
+            >
+              <view class="block-name">{{b.courseName}}</view>
+              <view class="block-loc">{{b.location}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="hint muted">
+      课表格子来自「手动导入」或已联调的平台适配器。点方块看详情。
+    </view>
+
+  </block>
+
+  <view class="page-bottom-space"></view>
+</view>

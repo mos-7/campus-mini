@@ -1,0 +1,133 @@
+.page {
+  padding-top: 24rpx;
+}
+
+/* ---------- 顶部 ---------- */
+
+.hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16rpx 48rpx 40rpx;
+}
+
+.hero-name {
+  font-size: 52rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  margin: 4rpx 0;
+}
+
+.hero-sub {
+  margin-top: 8rpx;
+}
+
+.hero-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 32rpx;
+  background: linear-gradient(135deg, #7a6cf0, #6b5ce7);
+  color: #ffffff;
+  font-size: 40rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ---------- 演示数据横幅 ---------- */
+
+.demo-banner {
+  display: flex;
+  align-items: flex-start;
+  margin: 0 24rpx 24rpx;
+  padding: 24rpx 28rpx;
+  border-radius: 24rpx;
+  background: #fff8e8;
+  border: 1rpx solid #ffe6b0;
+}
+
+.demo-banner-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+  line-height: 1.2;
+}
+
+.demo-banner-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.demo-banner-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #8a6100;
+  margin-bottom: 6rpx;
+}
+
+.demo-banner-text {
+  font-size: 23rpx;
+  color: #a37b1a;
+  line-height: 1.6;
+}
+
+/* ---------- 今日课程 ---------- */
+
+.today-sub {
+  margin-bottom: 20rpx;
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  padding: 22rpx 0;
+  border-top: 1rpx solid #f0f1f5;
+}
+
+.session:first-of-type {
+  border-top: none;
+}
+
+.session-time {
+  width: 110rpx;
+  text-align: center;
+  flex-shrink: 0;
+  padding-right: 20rpx;
+  border-right: 1rpx solid #f0f1f5;
+  margin-right: 24rpx;
+}
+
+.session-section {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #6b5ce7;
+  line-height: 1.2;
+}
+
+.session-body {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- 公告 ---------- */
+
+.notice {
+  padding: 16rpx 0;
+  border-top: 1rpx solid #f0f1f5;
+}
+
+.notice:first-of-type {
+  border-top: none;
+}
+
+/* ---------- 边界声明 ---------- */
+
+.boundary {
+  background: #fbfbfe;
+}
+
+.boundary .muted {
+  margin-top: 8rpx;
+  line-height: 1.7;
+}

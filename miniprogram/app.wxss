@@ -1,0 +1,162 @@
+/* 校园盒子 · 全局样式
+   配色对着参考截图走：浅灰底 + 白色圆角卡片 + 紫色主色 */
+
+page {
+  background: #f4f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  color: #1f2233;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+/* ---------- 卡片 ---------- */
+
+.card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 32rpx;
+  margin: 0 24rpx 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(31, 34, 51, 0.04);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.card-title::before {
+  content: '';
+  width: 8rpx;
+  height: 30rpx;
+  border-radius: 4rpx;
+  background: #6b5ce7;
+  margin-right: 16rpx;
+}
+
+/* ---------- 文字 ---------- */
+
+.muted {
+  color: #9aa0ac;
+  font-size: 24rpx;
+}
+
+.strong {
+  font-weight: 600;
+}
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 按钮 ---------- */
+
+.btn-primary {
+  background: linear-gradient(135deg, #7a6cf0, #6b5ce7);
+  color: #ffffff;
+  border-radius: 999rpx;
+  padding: 22rpx 0;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 500;
+  border: none;
+  line-height: 1.4;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-primary[disabled] {
+  background: #d8dae4;
+  color: #ffffff;
+}
+
+.btn-ghost {
+  background: #f2f1fd;
+  color: #6b5ce7;
+  border-radius: 999rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  border: none;
+  line-height: 1.4;
+}
+
+.btn-ghost::after {
+  border: none;
+}
+
+/* ---------- 徽标 ---------- */
+
+.badge {
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background: #f2f1fd;
+  color: #6b5ce7;
+}
+
+.badge-off {
+  background: #f0f1f5;
+  color: #9aa0ac;
+}
+
+.badge-ok {
+  background: #e8f8ef;
+  color: #22a06b;
+}
+
+/* ---------- 空状态 ---------- */
+
+.empty {
+  padding: 60rpx 0;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  line-height: 1;
+  margin-bottom: 24rpx;
+}
+
+.empty-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.empty-desc {
+  color: #9aa0ac;
+  font-size: 24rpx;
+  margin-bottom: 32rpx;
+  padding: 0 40rpx;
+}
+
+/* ---------- 布局 ---------- */
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.gap {
+  gap: 16rpx;
+}
+
+.page-bottom-space {
+  height: 40rpx;
+}

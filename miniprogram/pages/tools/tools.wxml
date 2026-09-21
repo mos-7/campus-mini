@@ -1,0 +1,68 @@
+<view class="page">
+
+  <view class="intro">
+    <view class="intro-title">快捷入口</view>
+    <view class="muted">
+      已连接 {{boundCount}} / {{totalCount}} 个平台。灰色的入口需要先绑定对应平台。
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="card">
+    <view class="empty"><view class="empty-desc">正在加载…</view></view>
+  </view>
+
+  <view wx:elif="{{error}}" class="card">
+    <view class="empty">
+      <view class="empty-icon">⚠️</view>
+      <view class="empty-title">加载失败</view>
+      <view class="empty-desc">{{error}}</view>
+      <button class="btn-primary" bindtap="load">重试</button>
+    </view>
+  </view>
+
+  <block wx:else>
+
+    <!-- 功能网格 -->
+    <view class="grid">
+      <view
+        wx:for="{{features}}"
+        wx:key="code"
+        class="tile {{item.available ? '' : 'tile-off'}}"
+        data-feature="{{item}}"
+        bindtap="tapFeature"
+      >
+        <view class="tile-icon">{{item.icon}}</view>
+        <view class="tile-title">{{item.title}}</view>
+        <view class="tile-desc">{{item.desc}}</view>
+        <view wx:if="{{!item.available}}" class="badge badge-off tile-badge">未开放</view>
+      </view>
+    </view>
+
+    <!-- 一键绑定 -->
+    <view wx:if="{{boundCount === 0}}" class="card">
+      <view class="empty">
+        <view class="empty-icon">🔗</view>
+        <view class="empty-title">还没连接任何平台</view>
+        <view class="empty-desc">先绑定，工具才有数据可读。</view>
+        <button class="btn-primary" bindtap="goBind">去服务绑定中心</button>
+      </view>
+    </view>
+
+    <!-- 明确不做 -->
+    <view class="card">
+      <view class="card-head">
+        <view class="card-title">明确不做</view>
+      </view>
+      <view class="muted not-planned-intro">
+        下面这些不在设计范围内，不是"还没做"。
+      </view>
+      <view wx:for="{{notPlanned}}" wx:key="title" class="np-row">
+        <view class="np-icon">{{item.icon}}</view>
+        <view class="np-text">{{item.title}}</view>
+      </view>
+    </view>
+
+  </block>
+
+  <view class="page-bottom-space"></view>
+</view>

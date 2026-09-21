@@ -1,0 +1,16 @@
+{
+  "description": "校园盒子 CampusMate",
+  "appid": "wxYOUR_APPID_HERE",
+  "projectname": "campus-mini",
+  "compileType": "miniprogram",
+  "libVersion": "3.5.5",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "ignoreDevUnusedFiles": false
+  },
+  "condition": {}
+}

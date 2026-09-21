@@ -1,0 +1,127 @@
+<view class="page">
+
+  <!-- 顶部问候 -->
+  <view class="hero">
+    <view class="hero-text">
+      <view class="muted">{{greeting}}，</view>
+      <view class="hero-name">{{nickname}}</view>
+      <view class="muted hero-sub">校园盒子 · 只读你的校园信息</view>
+    </view>
+    <view class="hero-avatar">盒</view>
+  </view>
+
+  <!-- 演示数据横幅：只在真的显示了示例课表时出现，避免误导 -->
+  <view
+    wx:if="{{!loading && !error && today.demo}}"
+    class="demo-banner"
+    bindtap="goBind"
+  >
+    <view class="demo-banner-icon">👀</view>
+    <view class="demo-banner-body">
+      <view class="demo-banner-title">这是示例数据</view>
+      <view class="demo-banner-text">你还没绑定学校平台，当前显示示例课表。绑定后自动换成你自己的 →</view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="card">
+    <view class="empty">
+      <view class="empty-desc">正在加载…</view>
+    </view>
+  </view>
+
+  <!-- 加载失败 -->
+  <view wx:elif="{{error}}" class="card">
+    <view class="empty">
+      <view class="empty-icon">⚠️</view>
+      <view class="empty-title">加载失败</view>
+      <view class="empty-desc">{{error}}</view>
+      <button class="btn-primary" bindtap="load">重试</button>
+    </view>
+  </view>
+
+  <block wx:else>
+
+    <!-- 今日课程 -->
+    <view class="card">
+      <view class="card-head">
+        <view class="card-title">今日课程</view>
+        <view class="muted" bindtap="goSchedule">整周课表 ›</view>
+      </view>
+
+      <!-- 假期 -->
+      <view wx:if="{{!today.inTerm}}" class="empty">
+        <view class="empty-icon">🏖️</view>
+        <view class="empty-title">不在学期内</view>
+        <view class="empty-desc">按当前校历配置，本周是第 {{today.week}} 周。</view>
+      </view>
+
+      <!-- 有课 -->
+      <block wx:elif="{{today.sessions.length > 0}}">
+        <view class="muted today-sub">{{today.date}} · {{today.weekdayLabel}} · 第 {{today.week}} 周</view>
+        <view
+          wx:for="{{today.sessions}}"
+          wx:key="index"
+          class="session"
+          data-session="{{item}}"
+          bindtap="showSession"
+        >
+          <view class="session-time">
+            <view class="session-section">{{item.startSection}}-{{item.endSection}}</view>
+            <view class="muted">节</view>
+          </view>
+          <view class="session-body">
+            <view class="strong ellipsis">{{item.courseName}}</view>
+            <view class="muted ellipsis">
+              {{item.location || '地点未填'}}<text wx:if="{{item.teacher}}"> · {{item.teacher}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 没课，但已绑定 -->
+      <view wx:elif="{{hasBinding}}" class="empty">
+        <view class="empty-icon">🎉</view>
+        <view class="empty-title">今天没有课</view>
+        <view class="empty-desc">{{today.date}} · {{today.weekdayLabel}}，第 {{today.week}} 周</view>
+      </view>
+
+      <!-- 没绑定 -->
+      <view wx:else class="empty">
+        <view class="empty-icon">📚</view>
+        <view class="empty-title">未绑定任何平台</view>
+        <view class="empty-desc">绑定后让行程一目了然。也可以直接手动粘贴课表，不用交出账号。</view>
+        <button class="btn-primary" bindtap="goBind">立即绑定</button>
+      </view>
+    </view>
+
+    <!-- 更新公告 -->
+    <view class="card">
+      <view class="card-head">
+        <view class="card-title">更新公告</view>
+        <view class="muted" wx:if="{{announcements.length > 0}}">
+          {{announcements[0].publishedAt}}
+        </view>
+      </view>
+
+      <view wx:if="{{announcements.length === 0}}" class="muted">暂无公告</view>
+
+      <view wx:for="{{announcements}}" wx:key="id" class="notice">
+        <view class="strong">{{item.title}}</view>
+        <view class="muted">{{item.body}}</view>
+      </view>
+    </view>
+
+    <!-- 边界声明：放在首页，用户一眼能看到这个项目不干什么 -->
+    <view class="card boundary">
+      <view class="strong">这个应用只读</view>
+      <view class="muted">
+        只聚合你自己的课表、成绩、余额等信息。
+        不含挂机刷课、自动答题、签到代签、代跑刷步，也不破解任何平台的风控。
+      </view>
+    </view>
+
+  </block>
+
+  <view class="page-bottom-space"></view>
+</view>
