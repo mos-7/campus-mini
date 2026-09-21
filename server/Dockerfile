@@ -6,14 +6,20 @@
 
 # ---------- 构建阶段 ----------
 FROM gradle:8.10-jdk17 AS build
+
+# ★ 必须切成 root。gradle 官方镜像默认 USER gradle，而 WORKDIR 建出的目录
+#   属主是 root，Gradle 写 /app/build 会权限不足、构建 7 秒即失败，
+#   而且日志里只说 "did not complete successfully"，看不出真正原因。
+USER root
 WORKDIR /app
 
-# 先只拷构建脚本，利用 Docker 层缓存：改代码不会重新下载依赖
+# 先只拷构建脚本，利用 Docker 层缓存：改代码不会重新下载依赖。
+# ★ 不加 `|| true` —— 它会把依赖解析失败也吞掉，反而更难查。
 COPY settings.gradle build.gradle ./
-RUN gradle dependencies --no-daemon -q || true
+RUN gradle dependencies --no-daemon
 
 COPY src ./src
-RUN gradle bootJar --no-daemon -x test
+RUN gradle bootJar --no-daemon
 
 # ---------- 运行阶段 ----------
 FROM eclipse-temurin:17-jre

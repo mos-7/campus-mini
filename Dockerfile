@@ -11,14 +11,21 @@
 
 # ---------- 构建阶段 ----------
 FROM gradle:8.10-jdk17 AS build
+
+# ★ 必须切成 root。
+#   gradle 官方镜像默认 USER gradle，而 WORKDIR 建出的目录属主是 root，
+#   于是 Gradle 写 /app/build 时权限不足、秒退（构建日志里只有
+#   "gradle bootJar did not complete successfully"，看不到真正原因）。
+USER root
 WORKDIR /app
 
-# 先只拷构建脚本，利用 Docker 层缓存：改代码不会重新下载依赖
+# 先只拷构建脚本，利用 Docker 层缓存：改代码不会重新下载依赖。
+# ★ 不加 `|| true` —— 那会把解析失败也吞掉，反而更难查。
 COPY server/settings.gradle server/build.gradle ./
-RUN gradle dependencies --no-daemon -q || true
+RUN gradle dependencies --no-daemon
 
 COPY server/src ./src
-RUN gradle bootJar --no-daemon -x test
+RUN gradle bootJar --no-daemon
 
 # ---------- 运行阶段 ----------
 FROM eclipse-temurin:17-jre
