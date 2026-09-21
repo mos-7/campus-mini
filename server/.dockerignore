@@ -1,0 +1,9 @@
+# 本地/联调配置，含学校地址和厂商密钥 —— 云上走环境变量传，不烘进镜像
+src/main/resources/application-local.yml
+
+# 构建产物与本地产物
+build/
+.gradle/
+data/
+*.log
+.env

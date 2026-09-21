@@ -49,15 +49,19 @@
 PowerShell（Windows）：
 
 ```powershell
+# ★ 注意：PowerShell 5.1 是 .NET Framework，【没有】[Convert]::ToHexString
+#   （那是 .NET 5+ 才加的）。硬用会静默得到空字符串 —— 踩过。
+$rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
+
 # 32 字节 AES 主密钥（Base64）
 $b = New-Object byte[] 32
-[System.Security.Cryptography.RandomNumberGenerator]::Fill($b)
+$rng.GetBytes($b)
 "CAMPUS_MASTER_KEY=" + [Convert]::ToBase64String($b)
 
-# JWT 签名密钥
+# JWT 签名密钥（64 位十六进制）
 $j = New-Object byte[] 32
-[System.Security.Cryptography.RandomNumberGenerator]::Fill($j)
-"CAMPUS_JWT_SECRET=" + [Convert]::ToHexString($j).ToLower()
+$rng.GetBytes($j)
+"CAMPUS_JWT_SECRET=" + (-join ($j | ForEach-Object { $_.ToString('x2') }))
 ```
 
 Linux / macOS：
@@ -82,13 +86,30 @@ echo "CAMPUS_JWT_SECRET=$(openssl rand -hex 32)"
 | `SPRING_DATASOURCE_DRIVER_CLASS_NAME` | `com.mysql.cj.jdbc.Driver` | 覆盖默认的 H2 |
 | `SPRING_SQL_INIT_MODE` | `always`（首次建表后改 `never`） | 见下 |
 
+### 平台连接也走环境变量
+
+各平台的地址/密钥属于**部署私有配置**，不要写进代码或配置文件，
+否则会跟着 `server.zip` 一起烘进镜像（`.dockerignore` 已经把
+`src/main/resources/application-local.yml` 排除掉了，但环境变量才是正路）：
+
+| 变量 | 值 |
+| --- | --- |
+| `CAMPUS_MOBILEJW_ENABLED` | `true` |
+| `CAMPUS_MOBILEJW_BASE_URL` | 你学校的教务系统 API 地址 |
+| `CAMPUS_MOBILEJW_PWD_KEY` | 厂商的 16 字符 AES 密钥 |
+
 ⚠️ **生产必改的三个开关**：
 
 ```
 CAMPUS_WECHAT_MOCK_ENABLED=false     # 否则任何人都能传 openid 冒充登录！
-CAMPUS_DEMO_DATA=false               # 别把演示课表灌进生产库
 CAMPUS_CHAOXING_ENABLED=false        # 抓包联调通过后再改 true
+CAMPUS_DEBUG_ENDPOINTS=false         # 它会返回平台原始响应，含个人信息
 ```
+
+> **注意 `CAMPUS_DEMO_DATA` 要保持 `true`**（这是唯一一个开着比关着好的开关）。
+> 它让**没绑定账号的用户**（包括微信审核员）能看到一份带「示例数据」横幅的示例课表。
+> 关掉的话新用户看到空白页，审核被驳回的概率明显上升 —— 见
+> [`publish-miniprogram.md`](publish-miniprogram.md) 陷阱 1。
 
 `CAMPUS_WECHAT_MOCK_ENABLED=true` 在生产是**严重安全漏洞** ——
 别人只要 POST 一个 `{"openid":"随便谁的"}` 就能拿到那个人的 token。务必关掉。
@@ -104,8 +125,16 @@ CAMPUS_CHAOXING_ENABLED=false        # 抓包联调通过后再改 true
 
 ```powershell
 cd D:\syq\campus-mini\server
-# 打一个 zip，排除构建产物
-Compress-Archive -Path build.gradle, settings.gradle, Dockerfile, src -DestinationPath ..\server.zip -Force
+# 用临时目录暂存再打包 —— 直接压 src 会把 application-local.yml
+# （含学校地址和厂商密钥）也装进去，那是个坑。
+$stage = "$env:TEMP\campus-stage"
+Remove-Item $stage -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Force -Path $stage | Out-Null
+Copy-Item build.gradle, settings.gradle, Dockerfile, .dockerignore -Destination $stage
+Copy-Item src -Destination $stage -Recurse
+Remove-Item "$stage\src\test" -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item "$stage\src\main\resources\application-local.yml" -Force -ErrorAction SilentlyContinue
+Compress-Archive -Path "$stage\*" -DestinationPath ..\server.zip -Force
 ```
 
 云托管控制台 → 服务 → **新建版本** → 上传 `server.zip` → 部署。
