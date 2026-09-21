@@ -11,12 +11,26 @@
  *     必须显式带上 X-WX-SERVICE 头（云托管靠它路由到具体服务）。
  */
 
+// 本地联调 = false（走 wx.request 打 localhost）；上线 = true（走 callContainer）
 const USE_CLOUD = false;
 
-// 云托管环境 ID，在云托管控制台「环境」页能看到（形如 campus-1g2h3i4j5k6l7m）
-const CLOUD_ENV = 'REPLACE_WITH_YOUR_CLOUD_ENV_ID';
+// 云托管环境 ID。
+//
+// ★ 刻意不写死在这里，而是从 config.local.js 读 —— 那个文件已加入 .gitignore，
+//   所以你的环境 ID 不会被提交到公开仓库（和 project.config.json 里的 AppID 同理）。
+//   照同目录的 config.example.js 建一份 config.local.js 即可。
+//   读不到就退回占位符；只有在 USE_CLOUD = true 时才会因此报错。
+let CLOUD_ENV = 'REPLACE_WITH_YOUR_CLOUD_ENV_ID';
+try {
+  const local = require('./config.local');
+  if (local && local.CLOUD_ENV) {
+    CLOUD_ENV = local.CLOUD_ENV;
+  }
+} catch (e) {
+  // config.local.js 不存在。本地联调（USE_CLOUD=false）用不到它，属正常情况。
+}
 
-// 云托管服务名，必须和控制台里创建的服务名一致
+// 云托管服务名，必须和云托管控制台里创建的服务名一致
 const CLOUD_SERVICE = 'campus-api';
 
 const LOCAL_BASE = 'http://localhost:8080';

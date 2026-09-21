@@ -39,3 +39,6 @@ server/data/
 
 # H2 文件库可能落在启动目录下，任意层级都忽略
 data/
+
+# 小程序本地配置（含云托管环境 ID）
+miniprogram/utils/config.local.js
