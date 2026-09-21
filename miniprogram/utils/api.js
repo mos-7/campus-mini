@@ -12,7 +12,9 @@
  */
 
 // 本地联调 = false（走 wx.request 打 localhost）；上线 = true（走 callContainer）
-const USE_CLOUD = false;
+// ★ 已切到云端模式：后端部署在微信云托管（服务名 campus-api）。
+//   要回到本地联调，把这里改回 false 即可。
+const USE_CLOUD = true;
 
 // 云托管环境 ID。
 //
