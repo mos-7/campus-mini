@@ -198,6 +198,25 @@ public class CampusProperties {
          */
         private Map<String, String> curriculumParams = new LinkedHashMap<>();
 
+        /**
+         * 是否逐周抓课表。
+         *
+         * <p>课表接口<b>按周返回</b>，每门课自带完整周次范围。只抓一次的话，
+         * 会漏掉"只在后半学期才上"的课。所以默认逐周抓 {@code week=1..N} 再合并去重。
+         *
+         * <p>代价是 N 次请求（约 0.3 秒/次 + 120ms 间隔，20 周约 8 秒）。
+         * 同步是异步任务，不走云托管那 15 秒限制，所以可以接受。
+         */
+        private boolean fetchByWeek = true;
+
+        public boolean isFetchByWeek() {
+            return fetchByWeek;
+        }
+
+        public void setFetchByWeek(boolean fetchByWeek) {
+            this.fetchByWeek = fetchByWeek;
+        }
+
         /** 看门狗：单次请求超时（秒）。 */
         private int timeoutSeconds = 20;
 
