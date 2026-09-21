@@ -141,9 +141,22 @@ Compress-Archive -Path "$stage\*" -DestinationPath ..\server.zip -Force
 
 云托管会读 `Dockerfile` 用 `gradle:8.10-jdk17` 镜像构建。
 
-### 方式 B：关联代码仓库（推 Git 自动构建）
+### 方式 B：关联代码仓库（推 Git 自动构建）★ 推荐
 
-把仓库连到云托管，之后 push 即部署。
+把仓库连到云托管，之后 `git push` 即自动部署 —— 不用每次手动打包。
+
+⚠️ **一个必须注意的点**：云托管的 GitHub 绑定**默认从仓库根目录找 Dockerfile**。
+而本仓库的 Dockerfile 在 `server/` 下，所以根目录**额外放了一个** `Dockerfile`
+（`COPY server/src ...`），配合根目录的 `.dockerignore`，让默认配置直接可用。
+
+> 两个 Dockerfile 内容等价，只有 COPY 路径不同（根目录那个带 `server/` 前缀）。
+> **改了一个记得同步另一个。**
+
+配好后在「部署发布」页：
+- 选择方式：**绑定 GitHub 仓库**
+- 代码仓库 / 分支：选你的仓库和 `main`
+- **端口：`8080`** ← ⚠️ 默认是 `80`，必须改（要和容器监听端口一致）
+- 点「发布」
 
 ### 方式 C：本地构建镜像推送
 

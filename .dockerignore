@@ -1,0 +1,31 @@
+# 云托管「绑定 GitHub 仓库」的构建上下文是仓库根目录，把跟后端无关的都排除。
+# （本地 `docker build ./server` 用的是 server/.dockerignore，不受这个影响。）
+
+# 版本控制与编辑器的东西
+.git/
+.gitignore
+
+# 小程序端：跟后端镜像无关，排除能显著减小构建上下文
+miniprogram/
+
+# 文档
+docs/
+*.md
+
+# 构建产物与本地产物
+build/
+.gradle/
+server/build/
+server/.gradle/
+server/data/
+data/
+*.log
+*.zip
+.env
+
+# 后端测试代码：bootJar 不需要，排除省时间
+server/src/test/
+
+# ★ 本地/联调配置，含学校 API 地址和厂商密钥 ——
+#   云上必须走环境变量传，绝不能烘进镜像
+server/src/main/resources/application-local.yml
