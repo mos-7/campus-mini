@@ -13,11 +13,14 @@ spring:
   config:
     import: optional:classpath:application-local.yml
 
-  # ---- 本地开发：H2 内存库 ----
+  # ---- 本地开发：H2 文件库（不是内存库）----
+  # 用文件库是为了让绑定关系、课表缓存跨重启保留 —— 内存库每次重启都要重新绑定，
+  # 开发时很烦。数据落在 server/data/ 下（已 gitignore）。
+  # schema.sql 全是 CREATE TABLE IF NOT EXISTS，重复执行安全。
   # 生产（云托管 MySQL）：把 url/driver/username/password 换成环境变量注入，
   # 并把 sql.init.mode 设为 never（表用 db/migration 里的脚本或手工建）。
   datasource:
-    url: jdbc:h2:mem:campus;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    url: jdbc:h2:file:./data/campus;MODE=MySQL;DATABASE_TO_LOWER=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password: ""

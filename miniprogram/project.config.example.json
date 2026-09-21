@@ -1,4 +1,5 @@
 {
+  "_comment": "复制这个文件为 project.config.json，再把 appid 换成你自己的。这两个文件已加入 .gitignore，不会进公开仓库 —— 因为里面的 AppID 是你小程序的持久标识，没必要公开关联到你的 GitHub 账号。",
   "description": "校园盒子 CampusMate",
   "appid": "wxYOUR_APPID_HERE",
   "projectname": "campus-mini",

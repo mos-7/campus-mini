@@ -8,6 +8,7 @@ import com.campus.mini.adapter.model.Models.Credential;
 import com.campus.mini.adapter.model.Models.VerifyResult;
 import com.campus.mini.common.ApiException;
 import com.campus.mini.config.CampusProperties;
+import com.campus.mini.schedule.ScheduleStore;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,15 +30,18 @@ public class BindingService {
     private final BindingStore store;
     private final CredentialVault vault;
     private final CampusProperties properties;
+    private final ScheduleStore scheduleStore;
 
     public BindingService(AdapterRegistry registry,
                           BindingStore store,
                           CredentialVault vault,
-                          CampusProperties properties) {
+                          CampusProperties properties,
+                          ScheduleStore scheduleStore) {
         this.registry = registry;
         this.store = store;
         this.vault = vault;
         this.properties = properties;
+        this.scheduleStore = scheduleStore;
     }
 
     /** 前端「服务绑定中心」的一张卡片。 */
@@ -135,6 +139,10 @@ public class BindingService {
     public void unbind(long userId, String adapterCode) {
         require(adapterCode);
         store.deleteBinding(userId, adapterCode);
+        // ★ 必须连同步进来的课程/课表一起清掉 ——
+        //   小程序里的确认框承诺了「已同步的课表缓存也会一并清掉」。
+        //   只删绑定记录的话，解绑后那些课还挂在课表上（踩过）。
+        scheduleStore.deleteAll(userId, adapterCode);
     }
 
     /** 取出明文凭据。只有 {@code SyncService} 该调它。 */

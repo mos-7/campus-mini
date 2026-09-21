@@ -163,24 +163,22 @@ public class MobileJwAdapter implements CampusAdapter, RawProbe {
         return Set.of(Capability.COURSE_LIST, Capability.SCHEDULE, Capability.GRADE);
     }
 
+    /**
+     * 验证凭据 —— <b>只登录，不抓课表</b>。
+     *
+     * <p>为什么要这么克制：抓课表要<b>逐周请求 20 次</b>（约 10 秒）。
+     * 如果放在这里，绑定接口就变成一个十秒级的同步请求 ——
+     * 本地用 {@code wx.request} 勉强能撑，但上线后小程序走云托管的
+     * {@code callContainer} 有 <b>15 秒硬超时</b>，绑定会直接失败。
+     *
+     * <p>所以职责分清：这里只做一次登录（快），真正的抓取交给异步同步任务
+     * （见 {@code SyncService}，有进度条、有状态落库）。
+     */
     @Override
     public VerifyResult verify(Credential credential) {
         try {
-            Session session = open(credential);
-            List<CourseSession> sessions = fetchSessions(session);
-            // displayName 传 null：账号标识由用户填的用户名定（见 BindingService.bind），
-            // 这里只给人类提示，别把消息塞进 displayName（踩过）。
-            if (sessions.isEmpty()) {
-                return VerifyResult.ok(null, "登录成功，但课表没解析出条目，可能字段映射还需调整。");
-            }
-            // ★ 类型必须是 TreeSet/NavigableSet，不能声明成 Set ——
-            //   Set 接口没有 first()/last()，编译不过（刚踩）。
-            TreeSet<Integer> weeksSorted = new TreeSet<>();
-            for (CourseSession s : sessions) {
-                weeksSorted.addAll(s.weeks());
-            }
-            return VerifyResult.ok(null, "登录成功，解析到 " + sessions.size() + " 条上课安排，"
-                    + "覆盖第 " + weeksSorted.first() + "-" + weeksSorted.last() + " 周");
+            open(credential);
+            return VerifyResult.ok(null, "登录成功，点「立即同步」拉取课表");
         } catch (AdapterException e) {
             return VerifyResult.fail(e.getMessage());
         }

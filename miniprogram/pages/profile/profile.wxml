@@ -157,7 +157,7 @@
         class="textarea"
         value="{{formSecret}}"
         bindinput="onSecretInput"
-        placeholder="密码，或直接粘贴 Cookie（不想交出密码时用这个）"
+        placeholder="密码（或按平台提示粘贴 Token / Cookie）"
         maxlength="-1"
       />
     </block>

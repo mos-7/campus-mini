@@ -27,3 +27,15 @@ server.zip
 # 如果你哪天把主密钥写进了文件，这个兜底能救你一次
 *secret*
 *master-key*
+
+# ---------- 小程序本地配置 ----------
+# 含你的 AppID 和本机 DevTools 设置，属于本地状态，不进公开仓库。
+# 别人 clone 后照 project.config.example.json 建一份即可。
+miniprogram/project.config.json
+miniprogram/project.private.config.json
+
+# 本地 H2 文件库
+server/data/
+
+# H2 文件库可能落在启动目录下，任意层级都忽略
+data/

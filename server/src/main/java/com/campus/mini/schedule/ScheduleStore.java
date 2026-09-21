@@ -89,10 +89,21 @@ public class ScheduleStore {
      * <p>先删后插，保证「平台上删掉的课」在我们这边也消失。整个过程在一个事务里
      * （由调用方 {@code @Transactional} 保证，或单条 SQL 的原子性兜底）。
      */
-    public void replaceAll(long userId, String adapterCode,
-                           List<Course> courses, List<CourseSession> sessions) {
+    /**
+     * 删掉某用户在某平台下同步进来的全部课程与课表。
+     *
+     * <p>解绑时必须调它。小程序里的确认框写着「已同步的课表缓存也会一并清掉」，
+     * 如果只删绑定记录不删数据，<b>解绑后那些课还会留在课表里</b> —— 文案就成了谎话。
+     * （踩过：解绑「手动导入」后测试数据仍在第 3 周课表里显示。）
+     */
+    public void deleteAll(long userId, String adapterCode) {
         jdbc.update("DELETE FROM course WHERE user_id = ? AND adapter_code = ?", userId, adapterCode);
         jdbc.update("DELETE FROM course_session WHERE user_id = ? AND adapter_code = ?", userId, adapterCode);
+    }
+
+    public void replaceAll(long userId, String adapterCode,
+                           List<Course> courses, List<CourseSession> sessions) {
+        deleteAll(userId, adapterCode);
 
         Timestamp now = Timestamp.from(Instant.now());
 
