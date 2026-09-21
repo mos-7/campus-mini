@@ -179,11 +179,69 @@ public class CampusProperties {
         /** 联调通过前保持 false，前端显示「未开放」。 */
         private boolean enabled = false;
 
-        /** API 根地址。例：{@code http://<host>:<port>/<ctx>} */
-        private String baseUrl = "";
+        /**
+         * API 根地址。例：{@code http://<host>:<port>/<ctx>}
+         *
+         * <p>★ 属性名是点分的 {@code campus.mobilejw.base.url}，<b>不是</b> {@code base-url}。
+         *
+         * <p>踩过的坑：Spring Boot 的环境变量映射规则是「<b>点换成下划线，连字符直接删掉</b>」。
+         * 所以 {@code base-url} 对应的环境变量是 {@code CAMPUS_MOBILEJW_BASEURL}
+         * （BASE 和 URL 之间<b>没有下划线</b>），而 {@code base.url} 才对应
+         * {@code CAMPUS_MOBILEJW_BASE_URL} —— 后者才是任何人都会写的样子。
+         * 当时因为写成 {@code base-url}，云端变量明明填了却一直读不到，
+         * 表现为「移动教务暂未开放」。
+         */
+        private final Base base = new Base();
 
-        /** 密码加密密钥（16 字符，AES-128）。厂商产品级常量，按约定不入公开仓库。 */
-        private String pwdKey = "";
+        /**
+         * AES 密钥（16 字符）。属性名同样是点分的 {@code campus.mobilejw.pwd.key}
+         * → 环境变量 {@code CAMPUS_MOBILEJW_PWD_KEY}（原因见 {@link #base}）。
+         */
+        private final Pwd pwd = new Pwd();
+
+        public Base getBase() {
+            return base;
+        }
+
+        public Pwd getPwd() {
+            return pwd;
+        }
+
+        /** 便捷访问 {@code base.url}。 */
+        public String getBaseUrl() {
+            return base.getUrl();
+        }
+
+        /** 便捷访问 {@code pwd.key}。 */
+        public String getPwdKey() {
+            return pwd.getKey();
+        }
+
+        /** {@code campus.mobilejw.base.url} */
+        public static class Base {
+            private String url = "";
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
+            }
+        }
+
+        /** {@code campus.mobilejw.pwd.key} */
+        public static class Pwd {
+            private String key = "";
+
+            public String getKey() {
+                return key;
+            }
+
+            public void setKey(String key) {
+                this.key = key;
+            }
+        }
 
         private String loginPath = "/login";
         private String curriculumPath = "/student/curriculum";
@@ -234,27 +292,11 @@ public class CampusProperties {
         }
 
         public boolean isEnabled() {
-            return enabled && !baseUrl.isBlank() && !pwdKey.isBlank();
+            return enabled && !base.getUrl().isBlank() && !pwd.getKey().isBlank();
         }
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
-        }
-
-        public String getBaseUrl() {
-            return baseUrl;
-        }
-
-        public void setBaseUrl(String baseUrl) {
-            this.baseUrl = baseUrl;
-        }
-
-        public String getPwdKey() {
-            return pwdKey;
-        }
-
-        public void setPwdKey(String pwdKey) {
-            this.pwdKey = pwdKey;
         }
 
         public String getLoginPath() {

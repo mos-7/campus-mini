@@ -98,6 +98,25 @@ echo "CAMPUS_JWT_SECRET=$(openssl rand -hex 32)"
 | `CAMPUS_MOBILEJW_BASE_URL` | 你学校的教务系统 API 地址 |
 | `CAMPUS_MOBILEJW_PWD_KEY` | 厂商的 16 字符 AES 密钥 |
 
+> ### ★ 环境变量命名规则（踩过，很隐蔽）
+>
+> Spring Boot 把配置属性映射到环境变量时，规则是：
+> **点换成下划线，连字符`-`直接删掉，然后全大写。**
+>
+> | 配置属性 | 对应的环境变量 | 能用吗 |
+> | --- | --- | --- |
+> | `spring.datasource.url` | `SPRING_DATASOURCE_URL` | ✅ |
+> | `campus.mobilejw.base.url` | `CAMPUS_MOBILEJW_BASE_URL` | ✅ |
+> | `campus.mobilejw.base-url` | `CAMPUS_MOBILEJW_BASEURL`（**没有下划线**） | 只有这个能用 |
+> | ~~`CAMPUS_MOBILEJW_BASE_URL`~~ 配 `base-url` | 绑不上，静默为空 | ❌ |
+>
+> **所以本项目的属性名一律用点分（`base.url`、`pwd.key`）而不是连字符**，
+> 这样环境变量就是任何人都会写的 `CAMPUS_MOBILEJW_BASE_URL`。
+>
+> 这个坑的恶劣之处在于**它不报错**：变量明明填了，属性就是空的，
+> 表现成「平台显示暂未开放」，能在控制台里翻半天。
+> 用 `[启动自检]` 那几行日志可以一秒确认（见下一节）。
+
 ⚠️ **生产必改的三个开关**：
 
 ```
