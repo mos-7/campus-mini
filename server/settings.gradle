@@ -1,1 +1,21 @@
+// 插件与依赖的仓库配置。
+//
+// ★ 为什么要显式写 pluginManagement：
+//   build.gradle 里的 `plugins { id 'org.springframework.boot' version '3.3.5' }`
+//   默认从 Gradle 插件门户（plugins.gradle.org）解析。那个域名在国内 ——
+//   尤其是云端构建容器里 —— 经常很慢甚至直接超时，表现为
+//   `gradle dependencies` 失败、而错误信息又很含糊。
+//   换成阿里云镜像后稳定得多。
+//
+//   ⚠️ 注意 build.gradle 里的 `repositories {}` 只管【依赖】的下载，
+//      管不到【插件】的解析 —— 插件必须在这里配。这是个容易踩的坑。
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
 rootProject.name = 'campus-api'
