@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -73,9 +72,17 @@ public class BindingStore {
         KeyHolder holder = new GeneratedKeyHolder();
         try {
             jdbc.update(connection -> {
+                // ★ 必须显式指定只取 "id" 这一列，不能用 Statement.RETURN_GENERATED_KEYS。
+                //
+                // 踩过的坑：给 created_at 加了 DEFAULT CURRENT_TIMESTAMP 之后，
+                // H2 会把「所有带默认值的列」都当作生成键一起返回，于是
+                // holder.getKey() 抛：
+                //   The getKey method should only be used when a single key is returned.
+                //   The current key entry contains multiple keys: [{id=2, created_at=...}]
+                // 表现是【第一个用户登录直接 500】。显式列出列名后，两种数据库都只回 id。
                 PreparedStatement ps = connection.prepareStatement(
                         "INSERT INTO app_user (openid, nickname, avatar_url, created_at) VALUES (?, ?, ?, ?)",
-                        Statement.RETURN_GENERATED_KEYS);
+                        new String[]{"id"});
                 ps.setString(1, openid);
                 ps.setString(2, nickname);
                 ps.setString(3, avatarUrl);

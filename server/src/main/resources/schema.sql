@@ -1,6 +1,15 @@
 -- 校园盒子 · 建表脚本
--- 同时兼容 H2（MODE=MySQL）和 MySQL 8。
+-- 同时兼容 H2（MODE=MySQL）、MySQL 5.7 和 MySQL 8。
 -- 所有语句都是幂等的，可以重复执行。
+--
+-- ★★ 关于 TIMESTAMP 列：必须显式写 DEFAULT CURRENT_TIMESTAMP
+--   踩过这个坑：MySQL 5.7 默认 sql_mode 含 NO_ZERO_DATE，而 MySQL 只让
+--   【第一个】TIMESTAMP 列自动获得 DEFAULT CURRENT_TIMESTAMP。于是
+--   `binding` 表里第二个 NOT NULL 的 TIMESTAMP（created_at）没默认值，
+--   隐式取零值 '0000-00-00' 又被 NO_ZERO_DATE 拒绝，启动直接报：
+--       Invalid default value for 'created_at'
+--   所以下面每个 NOT NULL 的 TIMESTAMP 都显式给了默认值。
+--   （MySQL 5.6.5 起允许多个列都有 CURRENT_TIMESTAMP 默认值。）
 
 -- 表名用 app_user 而不是 user：
 -- H2 2.x 把 USER 当保留字（它是内置函数），`CREATE TABLE user` 会直接报语法错误。
@@ -10,7 +19,7 @@ CREATE TABLE IF NOT EXISTS app_user (
     openid     VARCHAR(64)  NOT NULL UNIQUE,
     nickname   VARCHAR(64),
     avatar_url VARCHAR(512),
-    created_at TIMESTAMP    NOT NULL
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 平台绑定。secret_encrypted 是 CredentialVault 的密文，永不存明文。
@@ -24,7 +33,7 @@ CREATE TABLE IF NOT EXISTS binding (
     status           VARCHAR(16)  NOT NULL DEFAULT 'BOUND',
     last_sync_at     TIMESTAMP    NULL,
     last_error       VARCHAR(1024),
-    created_at       TIMESTAMP    NOT NULL,
+    created_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uk_binding_user_adapter UNIQUE (user_id, adapter_code)
 );
 
@@ -38,7 +47,7 @@ CREATE TABLE IF NOT EXISTS course (
     class_name       VARCHAR(255),
     cover_url        VARCHAR(512),
     raw_time_text    VARCHAR(512),
-    updated_at       TIMESTAMP    NOT NULL
+    updated_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 课表网格的一个格子。weeks 是 CSV，如 "1,3,5,7"
@@ -55,7 +64,7 @@ CREATE TABLE IF NOT EXISTS course_session (
     end_section        INT          NOT NULL,
     weeks              VARCHAR(512) NOT NULL,
     raw_text           VARCHAR(512),
-    updated_at         TIMESTAMP    NOT NULL
+    updated_at         TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 注意：这里【不】建索引。
@@ -73,7 +82,7 @@ CREATE TABLE IF NOT EXISTS sync_task (
     message       VARCHAR(1024),
     course_count  INT          NOT NULL DEFAULT 0,
     session_count INT          NOT NULL DEFAULT 0,
-    created_at    TIMESTAMP    NOT NULL,
+    created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     finished_at   TIMESTAMP    NULL
 );
 
