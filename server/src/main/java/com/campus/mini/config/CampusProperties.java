@@ -17,6 +17,7 @@ public class CampusProperties {
     private final Term term = new Term();
     private final Chaoxing chaoxing = new Chaoxing();
     private final MobileJw mobileJw = new MobileJw();
+    private final Wechat wechat = new Wechat();
     private String masterKey = "";
     private String jwtSecret = "";
 
@@ -41,6 +42,10 @@ public class CampusProperties {
 
     public MobileJw getMobileJw() {
         return mobileJw;
+    }
+
+    public Wechat getWechat() {
+        return wechat;
     }
 
     public boolean isDemoData() {
@@ -306,6 +311,43 @@ public class CampusProperties {
 
         public void setTimeoutSeconds(int timeoutSeconds) {
             this.timeoutSeconds = timeoutSeconds;
+        }
+    }
+
+    /**
+     * 微信侧配置。
+     *
+     * <p>为什么做成配置对象而不是散落的 {@code @Value}：
+     * 启动自检（{@link StartupDiagnostics}）要把它打出来 —— 生产环境最容易出问题的
+     * 就是"环境变量没生效"，而只看控制台的变量列表分不清是**没存**还是**没应用**。
+     */
+    public static class Wechat {
+
+        /** 云托管注入 openid 的请求头名。各家环境实测下来一般是 {@code x-wx-openid}。 */
+        private String openidHeader = "x-wx-openid";
+
+        /**
+         * 是否允许请求体直接传 openid 登录（本地开发用）。
+         *
+         * <p>★ 生产必须 false。设成 true 的话，任何人 POST 一个
+         * {@code {"openid":"别人的openid"}} 就能拿到那个人的登录 token。
+         */
+        private boolean mockEnabled = true;
+
+        public String getOpenidHeader() {
+            return openidHeader;
+        }
+
+        public void setOpenidHeader(String openidHeader) {
+            this.openidHeader = openidHeader;
+        }
+
+        public boolean isMockEnabled() {
+            return mockEnabled;
+        }
+
+        public void setMockEnabled(boolean mockEnabled) {
+            this.mockEnabled = mockEnabled;
         }
     }
 }

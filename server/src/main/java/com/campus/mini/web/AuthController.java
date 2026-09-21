@@ -3,10 +3,10 @@ package com.campus.mini.web;
 import com.campus.mini.binding.BindingStore;
 import com.campus.mini.common.ApiException;
 import com.campus.mini.common.ApiResponse;
+import com.campus.mini.config.CampusProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,16 +40,12 @@ public class AuthController {
 
     private final BindingStore store;
     private final JwtService jwt;
+    private final CampusProperties properties;
 
-    @Value("${campus.wechat.openid-header:x-wx-openid}")
-    private String openidHeader;
-
-    @Value("${campus.wechat.mock-enabled:true}")
-    private boolean mockEnabled;
-
-    public AuthController(BindingStore store, JwtService jwt) {
+    public AuthController(BindingStore store, JwtService jwt, CampusProperties properties) {
         this.store = store;
         this.jwt = jwt;
+        this.properties = properties;
     }
 
     /** 登录请求体。云托管环境下这些字段都不需要；本地 mock 时用 openid。 */
@@ -77,7 +73,7 @@ public class AuthController {
      * 优先用云托管注入的请求头；取不到时，如果 mock 开着就用请求体里的 openid。
      */
     private String resolveOpenid(HttpServletRequest request, LoginRequest body) {
-        String openid = request.getHeader(openidHeader);
+        String openid = request.getHeader(properties.getWechat().getOpenidHeader());
         if (openid == null || openid.isBlank()) {
             // 有些环境大小写或前缀不同，再兜一次
             openid = request.getHeader("x-wx-openid");
@@ -86,13 +82,15 @@ public class AuthController {
             return openid;
         }
 
-        if (mockEnabled && body != null && body.openid() != null && !body.openid().isBlank()) {
-            log.info("mock 登录：openid={}（生产环境请把 campus.wechat.mock-enabled 设为 false）", body.openid());
+        if (properties.getWechat().isMockEnabled()
+                && body != null && body.openid() != null && !body.openid().isBlank()) {
+            log.info("mock 登录：openid={}（生产环境请把 CAMPUS_WECHAT_MOCK_ENABLED 设为 false）",
+                    body.openid());
             return body.openid();
         }
 
         throw ApiException.unauthorized(
-                "拿不到微信身份。请在小程序内打开；本地开发时把 campus.wechat.mock-enabled "
+                "拿不到微信身份。请在小程序内打开；本地开发时把 CAMPUS_WECHAT_MOCK_ENABLED "
                         + "设为 true 并在请求体里传 openid。");
     }
 }
