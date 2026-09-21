@@ -206,6 +206,11 @@ Page({
   // 其他
   // ------------------------------------------------------------------
 
+  /** 隐私政策。提审时需要能查到这个页面，所以放在显眼位置。 */
+  privacy() {
+    wx.navigateTo({ url: '/pages/privacy/privacy' });
+  },
+
   notReady(e) {
     const what = e.currentTarget.dataset.what;
     wx.showModal({

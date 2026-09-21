@@ -102,6 +102,15 @@
         <view class="card-title">支持与反馈</view>
       </view>
 
+      <view class="setting" bindtap="privacy">
+        <view class="setting-icon">🔒</view>
+        <view class="setting-body">
+          <view class="setting-title">隐私政策</view>
+          <view class="muted">收集哪些信息、用来做什么、怎么存</view>
+        </view>
+        <view class="setting-arrow">›</view>
+      </view>
+
       <view class="setting" bindtap="about">
         <view class="setting-icon">ℹ️</view>
         <view class="setting-body">

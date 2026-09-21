@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/schedule/schedule",
     "pages/tools/tools",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/privacy/privacy"
   ],
   "window": {
     "backgroundTextStyle": "dark",

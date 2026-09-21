@@ -1,0 +1,56 @@
+.page {
+  padding-top: 32rpx;
+}
+
+/* ---------- 页头 ---------- */
+
+.policy-head {
+  padding: 0 48rpx 28rpx;
+}
+
+.policy-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+
+/* ---------- 一句话概括 ---------- */
+
+.summary {
+  margin: 0 24rpx 24rpx;
+  padding: 28rpx 32rpx;
+  border-radius: 24rpx;
+  background: #f2f1fd;
+}
+
+.summary-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6b5ce7;
+  margin-bottom: 10rpx;
+}
+
+.summary-text {
+  font-size: 26rpx;
+  color: #4a4a5a;
+  line-height: 1.75;
+}
+
+/* ---------- 正文 ---------- */
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 18rpx;
+}
+
+.para {
+  font-size: 27rpx;
+  line-height: 1.85;
+  color: #3a3a4a;
+  margin-bottom: 12rpx;
+}
+
+.para:last-child {
+  margin-bottom: 0;
+}
