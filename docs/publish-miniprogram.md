@@ -253,6 +253,7 @@ const CLOUD_SERVICE = 'campus-api';
 - [ ] 类目报的是「工具 - 效率/信息查询」
 - [ ] 名称不含学校名
 - [ ] 《用户隐私保护指引》已在后台配置
+- [ ] 小程序内能查到**隐私政策**（`我的 → 隐私政策`）—— 提审时把这一页也填进「功能页面」
 - [ ] 后端已部署到云托管，`/api/health` 可访问
 - [ ] `CAMPUS_WECHAT_MOCK_ENABLED=false` ★ 安全
 - [ ] `CAMPUS_MASTER_KEY` / `CAMPUS_JWT_SECRET` 已配置 ★ 安全
