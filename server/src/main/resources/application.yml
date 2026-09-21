@@ -7,6 +7,12 @@ spring:
   application:
     name: campus-api
 
+  # 本地/联调覆盖配置（该文件已 gitignore）。
+  # optional: 前缀保证文件不存在时也不报错 —— 所以公开仓库不带它也能正常启动。
+  # 里面放不该公开的东西：具体学校地址、厂商产品级密钥。
+  config:
+    import: optional:classpath:application-local.yml
+
   # ---- 本地开发：H2 内存库 ----
   # 生产（云托管 MySQL）：把 url/driver/username/password 换成环境变量注入，
   # 并把 sql.init.mode 设为 never（表用 db/migration 里的脚本或手工建）。

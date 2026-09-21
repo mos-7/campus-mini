@@ -4,6 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 本项目所有可调参数。对应 {@code application.yml} 里的 {@code campus.*}。
@@ -14,11 +16,32 @@ public class CampusProperties {
 
     private final Term term = new Term();
     private final Chaoxing chaoxing = new Chaoxing();
+    private final MobileJw mobileJw = new MobileJw();
     private String masterKey = "";
     private String jwtSecret = "";
 
     /** 启动时灌一份演示课表，方便小程序直接跑通。生产环境设 false。 */
     private boolean demoData = true;
+
+    /**
+     * 打开调试接口 {@code GET /api/debug/raw/{code}}。
+     *
+     * <p>★ 生产必须 false —— 它会把平台的原始响应原样吐出来，
+     * 里面有学生个人信息和平台内部结构。
+     */
+    private boolean debugEndpoints = false;
+
+    public boolean isDebugEndpoints() {
+        return debugEndpoints;
+    }
+
+    public void setDebugEndpoints(boolean debugEndpoints) {
+        this.debugEndpoints = debugEndpoints;
+    }
+
+    public MobileJw getMobileJw() {
+        return mobileJw;
+    }
 
     public boolean isDemoData() {
         return demoData;
@@ -133,6 +156,137 @@ public class CampusProperties {
 
         public void setCourseListUrl(String courseListUrl) {
             this.courseListUrl = courseListUrl;
+        }
+    }
+
+    /**
+     * 「移动教务」类厂商 SaaS 适配器。
+     *
+     * <p>这类系统是<b>厂商多租户产品</b>：前端由学校自行部署，后端 API 在厂商云或学校自己的
+     * 服务器上，运行时由一个 {@code serverconfig.json} 静态文件下发地址。
+     *
+     * <p>字段命名保持<b>厂商无关</b>：不出现任何具体学校名或地址。
+     * 真实取值放在 {@code application-local.yml}（已在 .gitignore 里），
+     * 公开仓库只保留空占位。见 {@code docs/jwxt-adapter.md}。
+     */
+    public static class MobileJw {
+
+        /** 联调通过前保持 false，前端显示「未开放」。 */
+        private boolean enabled = false;
+
+        /** API 根地址。例：{@code http://<host>:<port>/<ctx>} */
+        private String baseUrl = "";
+
+        /** 密码加密密钥（16 字符，AES-128）。厂商产品级常量，按约定不入公开仓库。 */
+        private String pwdKey = "";
+
+        private String loginPath = "/login";
+        private String curriculumPath = "/student/curriculum";
+        private String gradePath = "/gradeList";
+        private String termPath = "/currentTerm";
+        private String studentPath = "/student/my";
+
+        /** 响应里判定成功的 code 值（这套系统用 1，不是 0）。 */
+        private int successCode = 1;
+
+        /**
+         * 调课表接口时附带的额外查询参数。
+         *
+         * <p>课表接口需要一个"学期"参数，但字段名各校版本不同（{@code xnxqh} / {@code semester}
+         * / {@code xq}…）。做成配置是为了<b>不用改代码就能试</b>：
+         * 打开调试接口看真实响应，确认字段名后直接写进 yml。
+         */
+        private Map<String, String> curriculumParams = new LinkedHashMap<>();
+
+        /** 看门狗：单次请求超时（秒）。 */
+        private int timeoutSeconds = 20;
+
+        public Map<String, String> getCurriculumParams() {
+            return curriculumParams;
+        }
+
+        public void setCurriculumParams(Map<String, String> curriculumParams) {
+            this.curriculumParams = curriculumParams == null ? new LinkedHashMap<>() : curriculumParams;
+        }
+
+        public boolean isEnabled() {
+            return enabled && !baseUrl.isBlank() && !pwdKey.isBlank();
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getBaseUrl() {
+            return baseUrl;
+        }
+
+        public void setBaseUrl(String baseUrl) {
+            this.baseUrl = baseUrl;
+        }
+
+        public String getPwdKey() {
+            return pwdKey;
+        }
+
+        public void setPwdKey(String pwdKey) {
+            this.pwdKey = pwdKey;
+        }
+
+        public String getLoginPath() {
+            return loginPath;
+        }
+
+        public void setLoginPath(String loginPath) {
+            this.loginPath = loginPath;
+        }
+
+        public String getCurriculumPath() {
+            return curriculumPath;
+        }
+
+        public void setCurriculumPath(String curriculumPath) {
+            this.curriculumPath = curriculumPath;
+        }
+
+        public String getGradePath() {
+            return gradePath;
+        }
+
+        public void setGradePath(String gradePath) {
+            this.gradePath = gradePath;
+        }
+
+        public String getTermPath() {
+            return termPath;
+        }
+
+        public void setTermPath(String termPath) {
+            this.termPath = termPath;
+        }
+
+        public String getStudentPath() {
+            return studentPath;
+        }
+
+        public void setStudentPath(String studentPath) {
+            this.studentPath = studentPath;
+        }
+
+        public int getSuccessCode() {
+            return successCode;
+        }
+
+        public void setSuccessCode(int successCode) {
+            this.successCode = successCode;
+        }
+
+        public int getTimeoutSeconds() {
+            return timeoutSeconds;
+        }
+
+        public void setTimeoutSeconds(int timeoutSeconds) {
+            this.timeoutSeconds = timeoutSeconds;
         }
     }
 }

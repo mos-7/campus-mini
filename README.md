@@ -63,6 +63,7 @@ campus-mini/
 └─ docs/
    ├─ architecture.md           架构与适配器设计
    ├─ chaoxing.md               超星接入：边界 + 抓包验证步骤
+   ├─ jwxt-adapter.md           ★ 怎么接一个新平台（逆向方法 + 踩坑记录）
    ├─ deploy-cloudrun.md        云托管部署（免备案）
    └─ publish-miniprogram.md    ★ 发布微信小程序：注册/备案/审核/避坑
 ```
@@ -74,7 +75,7 @@ campus-mini/
 | 项 | 值 |
 | --- | --- |
 | Java 包名 | `com.campus.mini` |
-| 适配器 code | `chaoxing`（超星）、`manual`（手动导入兜底） |
+| 适配器 code | `chaoxing`（超星）、`mobilejw`（移动教务类厂商 SaaS）、`manual`（手动导入兜底） |
 | API 前缀 | `/api` |
 | 响应信封 | `{ "code": 0, "message": "ok", "data": ... }`，`code=0` 为成功 |
 | 鉴权 | `Authorization: Bearer <jwt>` |
@@ -129,10 +130,18 @@ gradle bootRun
 未完成：
 
 - [ ] **超星适配器：接口待抓包确认**（见 `docs/chaoxing.md`）
+- [x] **移动教务类厂商 SaaS 适配器（`mobilejw`）** —— 登录链路已端到端验证：
+      口令编码与原前端 JS **逐字节一致**（7 个用例含中文/特殊字符），
+      实测能连到学校服务器并正确解析出业务错误。课表字段映射待用真实账号确认。
+      接入方法见 [`docs/jwxt-adapter.md`](docs/jwxt-adapter.md)
 - [ ] 成绩查询适配器
 - [ ] 校园跑记录适配器
 - [ ] 订阅消息提醒（上课前提醒）
 - [ ] 作息时刻设置（需要先能拿到上下课时间）
+
+> **关于 `mobilejw` 适配器**：端点、密钥、开关全部走配置，取值放在
+> `application-local.yml`（已在 `.gitignore`）。公开仓库里只有配置驱动的通用骨架，
+> **不含任何具体学校信息**。要接你自己的学校，照 `docs/jwxt-adapter.md` 走一遍即可。
 
 ## 下一步
 

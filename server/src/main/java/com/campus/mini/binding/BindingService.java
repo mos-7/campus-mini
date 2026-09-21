@@ -3,6 +3,7 @@ package com.campus.mini.binding;
 import com.campus.mini.adapter.AdapterRegistry;
 import com.campus.mini.adapter.CampusAdapter;
 import com.campus.mini.adapter.impl.ChaoxingAdapter;
+import com.campus.mini.adapter.impl.MobileJwAdapter;
 import com.campus.mini.adapter.model.Models.Credential;
 import com.campus.mini.adapter.model.Models.VerifyResult;
 import com.campus.mini.common.ApiException;
@@ -167,6 +168,7 @@ public class BindingService {
     private boolean isEnabled(String adapterCode) {
         return switch (adapterCode) {
             case ChaoxingAdapter.CODE -> properties.getChaoxing().isEnabled();
+            case MobileJwAdapter.CODE -> properties.getMobileJw().isEnabled();
             default -> true;   // manual 等本地适配器永远可用
         };
     }
