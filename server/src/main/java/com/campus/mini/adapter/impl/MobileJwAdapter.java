@@ -236,7 +236,9 @@ public class MobileJwAdapter implements CampusAdapter, RawProbe {
         if (!cfg().isEnabled()) {
             throw new AdapterException(
                     "「移动教务」适配器未启用或未配置。\n"
-                            + "需要在 application-local.yml 里填 campus.mobilejw.base-url 和 pwd-key，"
+                            + "需要在 application-local.yml 里填 campus.mobilejw.base.url 和 "
+                            + "campus.mobilejw.pwd.key（对应环境变量 CAMPUS_MOBILEJW_BASE_URL / "
+                            + "CAMPUS_MOBILEJW_PWD_KEY），"
                             + "并把 enabled 设为 true。见 docs/jwxt-adapter.md。");
         }
 
@@ -605,7 +607,7 @@ public class MobileJwAdapter implements CampusAdapter, RawProbe {
             if (response.statusCode() >= 400) {
                 String hint = response.statusCode() == 401 || response.statusCode() == 403
                         ? "（token 可能已过期，重新绑定即可）"
-                        : "（检查 base-url 是否正确、是否需要校园网）";
+                        : "（检查 base.url 是否正确、是否需要校园网）";
                 throw new AdapterException("请求失败：HTTP " + response.statusCode() + hint);
             }
             return response.body();

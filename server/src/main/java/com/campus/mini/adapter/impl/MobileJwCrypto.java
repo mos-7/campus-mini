@@ -54,7 +54,8 @@ public final class MobileJwCrypto {
     public static String encodePassword(String password, String pwdKey) {
         if (pwdKey == null || pwdKey.getBytes(StandardCharsets.UTF_8).length != 16) {
             throw new IllegalStateException(
-                    "mobileJw.pwd-key 必须是 16 字节（AES-128）。当前无效，检查 application-local.yml。");
+                    "mobileJw.pwd.key（环境变量 CAMPUS_MOBILEJW_PWD_KEY）必须是 16 字节"
+                            + "（AES-128）。当前无效，检查 application-local.yml。");
         }
 
         byte[] plain = jsonStringify(password).getBytes(StandardCharsets.UTF_8);
