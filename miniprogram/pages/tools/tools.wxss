@@ -57,31 +57,3 @@
   top: 24rpx;
   right: 20rpx;
 }
-
-/* ---------- 明确不做 ---------- */
-
-.not-planned-intro {
-  margin-bottom: 16rpx;
-  line-height: 1.7;
-}
-
-.np-row {
-  display: flex;
-  align-items: center;
-  padding: 18rpx 0;
-  border-top: 1rpx solid #f0f1f5;
-}
-
-.np-row:first-of-type {
-  border-top: none;
-}
-
-.np-icon {
-  font-size: 32rpx;
-  margin-right: 20rpx;
-}
-
-.np-text {
-  font-size: 28rpx;
-  color: #6b6b7b;
-}

@@ -18,20 +18,11 @@ const FEATURE_META = {
   RUN_RECORD: { icon: '🏃', title: '校园跑记录', desc: '跑量查询', route: '' }
 };
 
-/** 明确不做的东西，单独列出来，免得有人以为是漏做了。 */
-const NOT_PLANNED = [
-  { icon: '🚫', title: '网课挂机 / 自动答题' },
-  { icon: '🚫', title: '签到代签' },
-  { icon: '🚫', title: '校园跑代跑 / 虚拟定位' },
-  { icon: '🚫', title: '验证码破解 / 代理换 IP' }
-];
-
 Page({
   data: {
     loading: true,
     error: '',
     features: [],
-    notPlanned: NOT_PLANNED,
     boundCount: 0,
     totalCount: 0
   },

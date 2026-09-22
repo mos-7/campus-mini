@@ -48,20 +48,6 @@
       </view>
     </view>
 
-    <!-- 明确不做 -->
-    <view class="card">
-      <view class="card-head">
-        <view class="card-title">明确不做</view>
-      </view>
-      <view class="muted not-planned-intro">
-        下面这些不在设计范围内，不是"还没做"。
-      </view>
-      <view wx:for="{{notPlanned}}" wx:key="title" class="np-row">
-        <view class="np-icon">{{item.icon}}</view>
-        <view class="np-text">{{item.title}}</view>
-      </view>
-    </view>
-
   </block>
 
   <view class="page-bottom-space"></view>

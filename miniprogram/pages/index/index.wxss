@@ -120,14 +120,3 @@
 .notice:first-of-type {
   border-top: none;
 }
-
-/* ---------- 边界声明 ---------- */
-
-.boundary {
-  background: #fbfbfe;
-}
-
-.boundary .muted {
-  margin-top: 8rpx;
-  line-height: 1.7;
-}

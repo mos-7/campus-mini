@@ -112,15 +112,6 @@
       </view>
     </view>
 
-    <!-- 边界声明：放在首页，用户一眼能看到这个项目不干什么 -->
-    <view class="card boundary">
-      <view class="strong">这个应用只读</view>
-      <view class="muted">
-        只聚合你自己的课表、成绩、余额等信息。
-        不含挂机刷课、自动答题、签到代签、代跑刷步，也不破解任何平台的风控。
-      </view>
-    </view>
-
   </block>
 
   <view class="page-bottom-space"></view>
