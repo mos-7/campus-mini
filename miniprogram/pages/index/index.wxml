@@ -7,7 +7,7 @@
       <view class="hero-name">{{nickname}}</view>
       <view class="muted hero-sub">小粥历 · 只读你本人的信息</view>
     </view>
-    <view class="hero-avatar">粥</view>
+    <image class="hero-avatar" src="/images/mascot.jpg" mode="aspectFill" />
   </view>
 
   <!-- 演示数据横幅：只在真的显示了示例课表时出现，避免误导 -->

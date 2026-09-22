@@ -26,13 +26,6 @@
   width: 96rpx;
   height: 96rpx;
   border-radius: 32rpx;
-  background: linear-gradient(135deg, #7a6cf0, #6b5ce7);
-  color: #ffffff;
-  font-size: 40rpx;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
 }
 
