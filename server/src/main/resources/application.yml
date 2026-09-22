@@ -3,6 +3,19 @@ server:
   # 云托管注意：容器只监听一个端口，务必和 Dockerfile 暴露的一致
   shutdown: graceful
 
+  tomcat:
+    # 默认 max=200 / min-spare=10 是给"通用网站"准备的。
+    # 我们这个量级（单实例、几十个用户）用不到，而且每个线程栈都占内存
+    # —— 0.5 GiB 的容器里要把内存当钱花。
+    threads:
+      max: 25
+      min-spare: 5
+    max-connections: 200
+    accept-count: 50
+    # 请求体上限。云托管本身限 100K，这里放 2MB 是为了本地联调不受限；
+    # 生产真正的闸门是云托管那 100K。见 docs/deploy-cloudrun.md 第十一节。
+    max-http-form-post-size: 2MB
+
 spring:
   application:
     name: campus-api
@@ -25,9 +38,46 @@ spring:
     username: sa
     password: ""
 
+    # ---- 连接池：给「MySQL 自动暂停」让路（直接决定数据库那笔钱）----
+    # 云托管 MySQL 的算力按 CCU·秒 计费（0.342 元/CCU·时，1CCU ≈ 1核2G），
+    # 但只要【连续 10 分钟没有任何读写和运算】，数据库就自动暂停、不再产生算力用量。
+    # 坑在于 HikariCP 默认 minimum-idle = maximum-pool-size = 10：它会一直攥着
+    # 10 条空闲连接，到期又立刻补建，有可能让数据库始终「看起来有负载」，永远不暂停。
+    # 本应用空闲时本来就不碰数据库（没有任何 @Scheduled），所以把空闲连接压到 0。
+    hikari:
+      minimum-idle: 0          # ★ 空闲时一条连接都不留
+      maximum-pool-size: 5     # 校园工具的并发量，5 条足够
+      idle-timeout: 60000      # 空闲 1 分钟即回收
+      max-lifetime: 600000     # 10 分钟强制重建（短于 MySQL 默认 wait_timeout）
+      connection-timeout: 10000
+
   sql:
     init:
-      mode: always
+      # embedded = 只在【嵌入式数据库】上跑 schema.sql。
+      # 生产 MySQL 不跑（表已建好，没必要每次启动都执行一遍）——这是这个值的目的。
+      # 好在两点：① 省掉每次启动的一堆 SQL；
+      # ② schema.sql 是对数据库的写操作，会重置云托管 MySQL「自动暂停」的 10 分钟计时，
+      #    每次重启都白等 10 分钟才暂停 —— 那 10 分钟是花钱的。
+      #
+      # ██ 实测警告：embedded 对本地 H2 文件库【不生效】██
+      #   本项目的本地库是 jdbc:h2:file:./data/campus —— 带 file:，Spring 不把它
+      #   判定为嵌入式数据库，于是 embedded 等同于 never，schema.sql 一次都不跑。
+      #   后果很隐蔽：App 【照常启动成功】、/api/health 返回 UP、演示课表也在，
+      #   但库里一张业务表都没有。唯一的外在症状是一行容易被忽略的告警：
+      #       WARN SyncService : 清理僵尸同步任务失败：... bad SQL grammar [...]
+      #   （真正原因是 sync_task 表不存在，而不是 SQL 写错了）
+      #
+      #   实测对照（同一次干净库启动）：
+      #     mode=embedded → 脚本执行 False、建表 0 张
+      #     mode=always   → 脚本执行 True 、建表 6 张
+      #     mode=never    → 脚本执行 False、建表 0 张
+      #
+      # ★ 所以本地首次起库（或删掉 data/ 之后重建）必须显式覆盖一次：
+      #     java -jar app.jar --spring.sql.init.mode=always
+      #   或设环境变量 SPRING_SQL_INIT_MODE=always。日常重启用默认值即可
+      #   （表已存在，脚本本来也是幂等的）。
+      #   生产 MySQL 首次建库同理，见 docs/deploy-cloudrun.md。
+      mode: embedded
       # ★ 必须显式指定 UTF-8！
       # 不写的话，Java 17 会用【平台默认字符集】读这个脚本 —— 中文 Windows 上是 GBK，
       # 于是 schema.sql 里的中文（公告内容）会变成乱码存进库里。
@@ -37,7 +87,14 @@ spring:
 
   h2:
     console:
-      enabled: true
+      # ★ 生产必须关，这里默认就是关的。
+      #   原因有两层：
+      #     1) 安全性：H2 console 允许在网页里填入任意 JDBC URL，
+      #        形如 jdbc:h2:mem:x;INIT=RUNSCRIPT FROM 'http://…' 是已知的 RCE 手法。
+      #        H2 是 runtimeOnly 依赖，生产镜像里【确实存在】，所以这个端点真的会被注册。
+      #     2) 成本：省掉一个 Servlet 的注册和一点点启动开销。
+      #   本地要用就在启动命令上加 --spring.h2.console.enabled=true，别改这里。
+      enabled: false
       path: /h2-console
 
   jackson:
@@ -88,7 +145,10 @@ campus:
 logging:
   level:
     root: INFO
-    com.campus.mini: DEBUG
+    # ★ 生产用 INFO。DEBUG 会给每个请求打一堆日志，既费 CPU（0.5 核的机器上很实在）
+    #   也费日志存储。排查时用环境变量临时打开，不要改这里的默认值：
+    #   CAMPUS_LOG_LEVEL=DEBUG
+    com.campus.mini: ${CAMPUS_LOG_LEVEL:INFO}
     # 打开可以看到发往超星的请求；排查抓包对不上时很有用。
     # ★ 注意：打开后日志里可能出现完整请求，别在公网环境长期开着
     # com.campus.mini.adapter: TRACE

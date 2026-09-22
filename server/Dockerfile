@@ -38,8 +38,20 @@ COPY --from=build /app/build/libs/app.jar /app/app.jar
 EXPOSE 8080
 
 # 云托管会在实例起来后探活；graceful shutdown 让同步线程有机会收尾
+#
+# ★ JVM 参数是【为最小规格容器调的】。根目录那个 Dockerfile 里有一份完整说明，
+#   改这里记得同步那边 —— 这两份文件内容必须保持一致，只有 COPY 路径不同。
+#
+# 摘要：0.5 GiB 容器里堆取 50%（256 MiB），非堆（Metaspace ≤128m + CodeCache
+#       + 线程栈 + JVM 自身）约 200 MiB，合计 ≈ 456 MiB，留在 512 MiB 以内。
+#       原来的 75% → 384 MiB 堆，非堆一加就 564 MiB，会被 OOM Kill。
 ENTRYPOINT ["java", \
-  "-XX:MaxRAMPercentage=75", \
+  "-XX:MaxRAMPercentage=50", \
+  "-XX:InitialRAMPercentage=25", \
+  "-XX:MaxMetaspaceSize=128m", \
+  "-Xss512k", \
+  "-XX:+UseSerialGC", \
+  "-XX:+ExitOnOutOfMemoryError", \
   "-Dfile.encoding=UTF-8", \
   "-Dsun.jnu.encoding=UTF-8", \
   "-Duser.timezone=Asia/Shanghai", \
