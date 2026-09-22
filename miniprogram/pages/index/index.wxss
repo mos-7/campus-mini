@@ -120,3 +120,24 @@
 .notice:first-of-type {
   border-top: none;
 }
+
+/* ---------- 开源仓库 ---------- */
+
+.repo {
+  margin-top: 24rpx;
+  padding: 20rpx 8rpx;
+  text-align: center;
+}
+
+.repo-url {
+  font-size: 22rpx;
+  color: #8a8fa3;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+.repo-hint {
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  color: #b4b8c6;
+}

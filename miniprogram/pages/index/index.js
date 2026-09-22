@@ -2,6 +2,9 @@ const api = require('../../utils/api');
 
 const app = getApp();
 
+/** 开源仓库地址，展示在首页底部。 */
+const REPO_URL = 'https://github.com/mos-7/campus-mini';
+
 /** 按当前时间给个问候语，和参考截图里那个"午安 / 同学 同学"对应。 */
 function greetingOf(hour) {
   if (hour < 6) {
@@ -29,7 +32,8 @@ Page({
     announcements: [],
     boundCount: 0,
     totalCount: 0,
-    hasBinding: false
+    hasBinding: false,
+    repoUrl: REPO_URL
   },
 
   onShow() {
@@ -68,6 +72,16 @@ Page({
 
   goSchedule() {
     wx.switchTab({ url: '/pages/schedule/schedule' });
+  },
+
+  /** 点仓库地址就复制，小程序的执行环境点不开外链，复制最实用。 */
+  copyRepo() {
+    wx.setClipboardData({
+      data: REPO_URL,
+      success() {
+        wx.showToast({ title: '仓库地址已复制', icon: 'none' });
+      }
+    });
   },
 
   /** 点某节课看详情 */

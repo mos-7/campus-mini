@@ -114,5 +114,11 @@
 
   </block>
 
+  <!-- 开源仓库：说明项目来源，也方便别人自己去看实现 -->
+  <view class="repo" bindtap="copyRepo">
+    <view class="repo-url">{{repoUrl}}</view>
+    <view class="repo-hint">项目源自这里，欢迎一起维护 · 点此复制</view>
+  </view>
+
   <view class="page-bottom-space"></view>
 </view>
