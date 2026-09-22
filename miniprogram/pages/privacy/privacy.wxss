@@ -14,28 +14,6 @@
   margin-bottom: 8rpx;
 }
 
-/* ---------- 一句话概括 ---------- */
-
-.summary {
-  margin: 0 24rpx 24rpx;
-  padding: 28rpx 32rpx;
-  border-radius: 24rpx;
-  background: #f2f1fd;
-}
-
-.summary-title {
-  font-size: 26rpx;
-  font-weight: 600;
-  color: #6b5ce7;
-  margin-bottom: 10rpx;
-}
-
-.summary-text {
-  font-size: 26rpx;
-  color: #4a4a5a;
-  line-height: 1.75;
-}
-
 /* ---------- 正文 ---------- */
 
 .section-title {
