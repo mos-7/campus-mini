@@ -2,6 +2,14 @@ const api = require('../../utils/api');
 
 const app = getApp();
 
+/**
+ * 开发者联系邮箱。
+ *
+ * ★ 改这里要同步改 `pages/privacy/privacy.js` 第九节，
+ *   以及微信后台「用户隐私保护指引」里的联系方式 —— 三处必须一致。
+ */
+const DEVELOPER_EMAIL = '2452246289@qq.com';
+
 /** 和 ManualAdapter.SAMPLE 保持一致的示例，方便一键试。 */
 const SAMPLE_TIMETABLE = [
   '高等数学,张老师,周一,1-2节,1-16周,教三201',
@@ -219,6 +227,22 @@ Page({
         + '因为上下课时间得先能从你学校的数据里拿到，或者手动配到 campus.term 里。',
       showCancel: false,
       confirmText: '知道了'
+    });
+  },
+
+  /**
+   * 联系开发者。
+   *
+   * ★ 隐私政策页里承诺的联系渠道就是这里 —— 两处必须同时存在，
+   *   否则就是"隐私政策与实际不符"（可被驳回）。
+   *   小程序的执行环境调不起邮件客户端，所以做成复制邮箱。
+   */
+  contact() {
+    wx.setClipboardData({
+      data: DEVELOPER_EMAIL,
+      success() {
+        wx.showToast({ title: '邮箱已复制', icon: 'none' });
+      }
     });
   },
 
