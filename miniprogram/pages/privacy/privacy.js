@@ -85,6 +85,6 @@ Page({
   },
 
   onShareAppMessage() {
-    return { title: '校园盒子 · 隐私政策' };
+    return { title: '小粥历 · 隐私政策' };
   }
 });

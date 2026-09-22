@@ -225,7 +225,7 @@ Page({
   about() {
     wx.showModal({
       title: '关于',
-      content: '校园盒子 · 只读的校园信息聚合工具。\n'
+      content: '小粥历 · 只读的个人信息查询工具。\n'
         + '不含刷课、代答、签到、代跑等功能，也不破解平台风控。',
       showCancel: false,
       confirmText: '知道了'

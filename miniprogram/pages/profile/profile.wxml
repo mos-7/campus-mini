@@ -2,7 +2,7 @@
 
   <view class="intro">
     <view class="intro-title">个人中心</view>
-    <view class="muted">校园盒子 · 只读的校园信息聚合</view>
+    <view class="muted">小粥历 · 只读的个人信息查询</view>
   </view>
 
   <view wx:if="{{loading}}" class="card">
@@ -114,7 +114,7 @@
       <view class="setting" bindtap="about">
         <view class="setting-icon">ℹ️</view>
         <view class="setting-body">
-          <view class="setting-title">关于校园盒子</view>
+          <view class="setting-title">关于小粥历</view>
           <view class="muted">这个项目做什么、不做什么</view>
         </view>
         <view class="setting-arrow">›</view>

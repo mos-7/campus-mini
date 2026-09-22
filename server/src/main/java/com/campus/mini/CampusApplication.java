@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 校园盒子 · 后端。
+ * 小粥历 · 后端。
  *
  * <p>启动后：
  * <ul>
