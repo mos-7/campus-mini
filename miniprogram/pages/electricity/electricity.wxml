@@ -1,97 +1,122 @@
 <view class="page">
 
-  <!-- 当前状态 -->
-  <view wx:if="{{latest}}" class="card">
+  <!-- ============ 实时余额（会话接力） ============ -->
+
+  <!-- 还没导入过会话：引导 -->
+  <view wx:if="{{!imported}}" class="card">
+    <view class="empty">
+      <view class="empty-icon">⚡</view>
+      <view class="empty-title">接入学校电费</view>
+      <view class="empty-desc">
+        学校电费在建行平台上，登录身份只认他们小程序。用"会话接力"就能自动查：
+        电脑上截留一次登录（有脚本帮忙，30 秒），出二维码后在这里扫一下，
+        以后打开本页就是实时余额。
+      </view>
+    </view>
+    <button class="btn-primary" bindtap="scanImport">扫一扫导入</button>
+    <view class="muted why-tip" bindtap="showImportHelp">不知道怎么操作？点看步骤</view>
+  </view>
+
+  <!-- 导入过：余额卡片 -->
+  <view wx:else class="card">
     <view class="card-head">
-      <view class="card-title">当前读数</view>
-      <view class="muted">{{latest.timeText}} 录入</view>
+      <view class="card-title">剩余电费</view>
+      <view class="muted">{{dormText}}</view>
+    </view>
+
+    <view class="balance-hero">
+      <text class="balance-num">{{fareText}}</text>
+      <text class="balance-unit">元</text>
     </view>
 
     <view class="now-row">
-      <view wx:if="{{latest.kwh !== ''}}" class="now-cell">
-        <view class="now-num">{{latest.kwh}}</view>
+      <view class="now-cell">
+        <view class="now-num">{{kwhText}}</view>
         <view class="muted">剩余电量（度）</view>
       </view>
-      <view wx:if="{{latest.yuan !== ''}}" class="now-cell">
-        <view class="now-num">{{latest.yuan}}</view>
-        <view class="muted">剩余金额（元）</view>
+      <view wx:if="{{subsidyText}}" class="now-cell">
+        <view class="now-num now-num--small">{{subsidyText}}</view>
+        <view class="muted">补助</view>
       </view>
     </view>
 
+    <view class="meta-row">
+      <view class="muted">{{updatedAtText}}</view>
+      <view class="link-btn" bindtap="refresh">刷新</view>
+    </view>
+
+    <!-- 会话过期横幅 -->
+    <view wx:if="{{status === 'EXPIRED'}}" class="expire-banner">
+      <view>会话已过期，显示的是最后一次读数。重新截留一次就能继续自动查。</view>
+      <button class="btn-primary btn-compact" bindtap="scanImport">重新扫码导入</button>
+    </view>
+  </view>
+
+  <!-- ============ 后端读数历史 ============ -->
+  <view wx:if="{{history.length}}" class="card">
+    <view class="card-head">
+      <view class="card-title">余额变化</view>
+      <view class="muted">{{history.length}} 条</view>
+    </view>
+
+    <view wx:for="{{history}}" wx:key="id" class="rec-row">
+      <view class="rec-body">
+        <view class="rec-main">
+          <text>{{item.fareText}} 元</text>
+          <text wx:if="{{item.kwhText !== '--'}}"> · {{item.kwhText}} 度</text>
+        </view>
+        <view class="muted">{{item.timeText}}</view>
+      </view>
+      <view wx:if="{{item.diffText}}" class="rec-diff {{item.diffText[0] === '+' ? 'up' : 'down'}}">{{item.diffText}}</view>
+    </view>
+  </view>
+
+  <!-- ============ 手动记一笔（本地，备用） ============ -->
+  <view class="card">
+    <view class="card-head">
+      <view class="card-title">手动记一笔</view>
+      <view class="muted">只存本机</view>
+    </view>
+
+    <view wx:if="{{latest}}" class="muted local-latest">
+      最新：{{latest.kwh !== '' ? latest.kwh + ' 度' : ''}}{{latest.kwh !== '' && latest.yuan !== '' ? ' · ' : ''}}{{latest.yuan !== '' ? latest.yuan + ' 元' : ''}}（{{latest.timeText}}）
+    </view>
     <view wx:if="{{diff}}" class="diff muted">
       距上次：
       <text wx:if="{{diff.kwh !== undefined}}">{{diff.kwh > 0 ? '+' : ''}}{{diff.kwh}} 度</text>
       <text wx:if="{{diff.yuan !== undefined}}"> · {{diff.yuan > 0 ? '+' : ''}}{{diff.yuan}} 元</text>
     </view>
-  </view>
-
-  <!-- 空状态 -->
-  <view wx:else class="card">
-    <view class="empty">
-      <view class="empty-icon">⚡</view>
-      <view class="empty-title">还没有记录</view>
-      <view class="empty-desc">在别处查到电费数字后，在这里记一笔，随时回看用量变化。</view>
-    </view>
-  </view>
-
-  <!-- 录入 -->
-  <view class="card">
-    <view class="card-head">
-      <view class="card-title">记一笔</view>
-    </view>
 
     <view class="input-row">
       <view class="input-cell">
         <view class="muted">剩余电量（度）</view>
-        <input
-          class="input"
-          type="digit"
-          value="{{kwh}}"
-          bindinput="onKwh"
-          placeholder="如 134.1"
-        />
+        <input class="input" type="digit" value="{{kwh}}" bindinput="onKwh" placeholder="如 134.1" />
       </view>
       <view class="input-cell">
         <view class="muted">剩余金额（元）</view>
-        <input
-          class="input"
-          type="digit"
-          value="{{yuan}}"
-          bindinput="onYuan"
-          placeholder="如 73.77"
-        />
+        <input class="input" type="digit" value="{{yuan}}" bindinput="onYuan" placeholder="如 73.77" />
       </view>
     </view>
 
-    <button class="btn-primary" bindtap="save">保存</button>
+    <button class="btn-secondary" bindtap="save">保存记录</button>
 
-    <view class="muted why-tip">
-      学校电费是建行平台，暂不支持自动查询——查到数字后手动记一笔即可，历史只存在你手机上。
-    </view>
-  </view>
-
-  <!-- 历史 -->
-  <view wx:if="{{records.length}}" class="card">
-    <view class="card-head">
-      <view class="card-title">历史记录</view>
-      <view class="muted">{{records.length}} 条</view>
-    </view>
-
-    <view
-      wx:for="{{records}}"
-      wx:key="id"
-      class="rec-row"
-      data-id="{{item.id}}"
-      bindlongpress="remove"
-    >
-      <view class="rec-body">
-        <view class="rec-main">
-          <text wx:if="{{item.kwh !== ''}}">{{item.kwh}} 度</text>
-          <text wx:if="{{item.yuan !== ''}}"> · {{item.yuan}} 元</text>
+    <view wx:if="{{records.length}}" class="local-records">
+      <view
+        wx:for="{{records}}"
+        wx:key="id"
+        class="rec-row"
+        data-id="{{item.id}}"
+        bindlongpress="remove"
+      >
+        <view class="rec-body">
+          <view class="rec-main">
+            <text wx:if="{{item.kwh !== ''}}">{{item.kwh}} 度</text>
+            <text wx:if="{{item.yuan !== ''}}"> · {{item.yuan}} 元</text>
+          </view>
+          <view class="muted">{{item.timeText}}</view>
         </view>
-        <view class="muted">{{item.timeText}}</view>
+        <view class="rec-del muted">长按删除</view>
       </view>
-      <view class="rec-del muted">长按删除</view>
     </view>
   </view>
 

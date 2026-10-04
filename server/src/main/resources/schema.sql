@@ -104,6 +104,41 @@ CREATE TABLE IF NOT EXISTS announcement (
     pinned       BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
+-- 建行 E码通 的"接力会话"。一个用户只存一份，重新导入就覆盖（user_id 主键）。
+-- 会话是用户自己在电脑上用 Reqable 断点截留、由 relay 脚本换出来的，
+-- 后端只负责保存和拿它去查数；银行侧约 30 分钟不用就过期，过期后要重新导入。
+CREATE TABLE IF NOT EXISTS ccb_session (
+    user_id      BIGINT       PRIMARY KEY,
+    ccb_userid   VARCHAR(64)  NOT NULL,
+    skey         VARCHAR(32)  NOT NULL,
+    cookie_header VARCHAR(2048),
+    roomid       VARCHAR(32),
+    room         VARCHAR(32),
+    areaid       VARCHAR(64),
+    areaname     VARCHAR(64),
+    buildingid   VARCHAR(32),
+    buildingname VARCHAR(64),
+    floorid      VARCHAR(32),
+    floorname    VARCHAR(32),
+    status       VARCHAR(16)  NOT NULL DEFAULT 'ACTIVE',
+    imported_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_ok_at   TIMESTAMP    NULL,
+    last_error   VARCHAR(512)
+);
+
+-- 电费读数历史。自动查询（source=CCB）和将来可能的其它来源共用一张表。
+CREATE TABLE IF NOT EXISTS electricity_reading (
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id      BIGINT       NOT NULL,
+    main_fare    DECIMAL(10, 2),
+    bal          DECIMAL(10, 2),
+    subsidy_bal  DECIMAL(10, 2),
+    subsidy_main DECIMAL(10, 2),
+    source       VARCHAR(16)  NOT NULL DEFAULT 'CCB',
+    note         VARCHAR(255),
+    queried_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- FROM DUAL 是 H2 和 MySQL 都认的写法（MySQL 里省略 FROM 的 SELECT ... WHERE 不可靠）
 INSERT INTO announcement (title, body, published_at, pinned)
 SELECT '项目已就跑通', '课表 + 今日课程可用（演示数据）。超星适配器待抓包联调，见 docs/chaoxing.md。', CURRENT_DATE, TRUE

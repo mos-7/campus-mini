@@ -12,8 +12,6 @@
  */
 
 // 本地联调 = false（走 wx.request 打 localhost）；上线 = true（走 callContainer）
-// ★ 已切到云端模式：后端部署在微信云托管（服务名 campus-api）。
-//   要回到本地联调，把这里改回 false 即可。
 const USE_CLOUD = true;
 
 // 云托管环境 ID。
@@ -233,6 +231,20 @@ const api = {
   unbindDorm: () => request('/api/electricity/bind', { method: 'DELETE' }),
 
   electricityBalance: () => request('/api/electricity/balance'),
+
+  // ---------------- 校园用电 · 建行会话接力 ----------------
+
+  /** 页面总查询：{ imported, status: NONE|ACTIVE|EXPIRED, dormText, latest: {mainFare, bal, ...} } */
+  ccbLive: () => request('/api/electricity/live'),
+
+  /** 扫码导入会话。payload 是 relay 二维码里的 JSON 原样。 */
+  ccbImport: (payload) => request('/api/electricity/import', { method: 'POST', data: payload }),
+
+  /** 强制刷新一次余额。 */
+  ccbRefresh: () => request('/api/electricity/refresh', { method: 'POST' }),
+
+  /** 读数历史，新的在前。 */
+  ccbHistory: (limit) => request('/api/electricity/history?limit=' + (limit || 30)),
 
   /**
    * 发起同步并轮询到结束。
