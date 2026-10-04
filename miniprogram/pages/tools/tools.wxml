@@ -7,16 +7,16 @@
     </view>
   </view>
 
-  <view wx:if="{{loading}}" class="card">
+  <view wx:if="{{loading}}" class="sticker">
     <view class="empty"><view class="empty-desc">正在加载…</view></view>
   </view>
 
-  <view wx:elif="{{error}}" class="card">
+  <view wx:elif="{{error}}" class="sticker">
     <view class="empty">
       <view class="empty-icon">⚠️</view>
       <view class="empty-title">加载失败</view>
       <view class="empty-desc">{{error}}</view>
-      <button class="btn-primary" bindtap="load">重试</button>
+      <button class="btn-primary btn-sticker" hover-class="btn-sticker-hover" bindtap="load">重试</button>
     </view>
   </view>
 
@@ -27,24 +27,25 @@
       <view
         wx:for="{{features}}"
         wx:key="code"
-        class="tile {{item.available ? '' : 'tile-off'}}"
+        class="tile tint-c{{index % 6}} {{item.available ? '' : 'tile-off'}}"
+        hover-class="tile-hover"
         data-feature="{{item}}"
         bindtap="tapFeature"
       >
         <view class="tile-icon">{{item.icon}}</view>
         <view class="tile-title">{{item.title}}</view>
         <view class="tile-desc">{{item.desc}}</view>
-        <view wx:if="{{!item.available}}" class="badge badge-off tile-badge">未开放</view>
+        <view wx:if="{{!item.available}}" class="tile-badge">未开放</view>
       </view>
     </view>
 
     <!-- 一键绑定 -->
-    <view wx:if="{{boundCount === 0}}" class="card">
+    <view wx:if="{{boundCount === 0}}" class="sticker">
       <view class="empty">
         <view class="empty-icon">🔗</view>
         <view class="empty-title">还没连接任何平台</view>
         <view class="empty-desc">先绑定，工具才有数据可读。</view>
-        <button class="btn-primary" bindtap="goBind">去服务绑定中心</button>
+        <button class="btn-primary btn-sticker" hover-class="btn-sticker-hover" bindtap="goBind">去服务绑定中心</button>
       </view>
     </view>
 

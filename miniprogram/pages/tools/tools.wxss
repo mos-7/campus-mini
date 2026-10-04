@@ -1,9 +1,11 @@
+/* 工具页 · 描边贴纸风（依赖 app.wxss 的 .sticker / .btn-sticker） */
+
 .page {
   padding-top: 32rpx;
 }
 
 .intro {
-  padding: 0 48rpx 28rpx;
+  padding: 0 44rpx 28rpx;
 }
 
 .intro-title {
@@ -12,7 +14,7 @@
   margin-bottom: 8rpx;
 }
 
-/* ---------- 功能网格 ---------- */
+/* ---------- 功能网格：糖果贴纸 ---------- */
 
 .grid {
   display: flex;
@@ -23,16 +25,30 @@
 .tile {
   width: calc(50% - 24rpx);
   margin: 0 12rpx 24rpx;
-  background: #ffffff;
-  border-radius: 28rpx;
+  border: 2rpx solid #26263a;
+  border-radius: 22rpx;
+  box-shadow: 4rpx 4rpx 0 rgba(38, 38, 58, 0.85);
   padding: 28rpx 24rpx;
   position: relative;
   box-sizing: border-box;
-  box-shadow: 0 4rpx 20rpx rgba(31, 34, 51, 0.04);
 }
 
+/* 按下去 */
+.tile-hover {
+  transform: translate(2rpx, 2rpx);
+  box-shadow: 2rpx 2rpx 0 rgba(38, 38, 58, 0.85);
+}
+
+/* 糖果色轮换（wxml 里 tint-c{{index % 6}}） */
+.tint-c0 { background: #e7defc; color: #5546a8; }
+.tint-c1 { background: #d9e8fd; color: #2f5fa8; }
+.tint-c2 { background: #d3f2e0; color: #1f7a4d; }
+.tint-c3 { background: #fdeec2; color: #8a6d1a; }
+.tint-c4 { background: #fbdcec; color: #a83e7d; }
+.tint-c5 { background: #ffe3cc; color: #a35422; }
+
 .tile-off {
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .tile-icon {
@@ -43,17 +59,25 @@
 
 .tile-title {
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 6rpx;
 }
 
 .tile-desc {
   font-size: 22rpx;
-  color: #9aa0ac;
+  opacity: 0.75;
 }
 
+/* 未开放：白色小贴纸盖在角上 */
 .tile-badge {
   position: absolute;
-  top: 24rpx;
-  right: 20rpx;
+  top: -10rpx;
+  right: -6rpx;
+  font-size: 20rpx;
+  color: #1f2233;
+  background: #ffffff;
+  border: 2rpx solid #26263a;
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+  box-shadow: 2rpx 2rpx 0 rgba(38, 38, 58, 0.85);
 }

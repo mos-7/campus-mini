@@ -1,14 +1,17 @@
+/* 首页 · 描边贴纸风（与课表页同一套语言）
+   依赖 app.wxss 里的 .sticker / .btn-sticker / .tint-* / .demo-banner */
+
 .page {
   padding-top: 24rpx;
 }
 
-/* ---------- 顶部 ---------- */
+/* ---------- 顶部问候 ---------- */
 
 .hero {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 16rpx 48rpx 40rpx;
+  padding: 16rpx 44rpx 40rpx;
 }
 
 .hero-name {
@@ -18,49 +21,45 @@
   margin: 4rpx 0;
 }
 
+/* 吉祥物头像：贴纸相框 */
 .hero-avatar {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 32rpx;
-  flex-shrink: 0;
-  /* 竖版整图用 aspectFit 塞进方盒，左右会留空 —— 垫白色和图片底色融为一体 */
-  background: #ffffff;
-}
-
-/* ---------- 演示数据横幅 ---------- */
-
-.demo-banner {
-  display: flex;
-  align-items: flex-start;
-  margin: 0 24rpx 24rpx;
-  padding: 24rpx 28rpx;
+  width: 100rpx;
+  height: 100rpx;
   border-radius: 24rpx;
-  background: #fff8e8;
-  border: 1rpx solid #ffe6b0;
+  flex-shrink: 0;
+  background: #ffffff;
+  border: 2rpx solid #26263a;
+  box-shadow: 4rpx 4rpx 0 rgba(38, 38, 58, 0.85);
+  box-sizing: border-box;
 }
 
-.demo-banner-icon {
-  font-size: 36rpx;
-  margin-right: 20rpx;
-  line-height: 1.2;
+/* ---------- 通用小件 ---------- */
+
+.sticker-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1f2233;
 }
 
-.demo-banner-body {
-  flex: 1;
-  min-width: 0;
+/* 右上角小胶囊链接 */
+.link-pill {
+  font-size: 24rpx;
+  color: #1f2233;
+  background: #ffffff;
+  border: 2rpx solid #26263a;
+  border-radius: 999rpx;
+  padding: 8rpx 22rpx;
+  box-shadow: 3rpx 3rpx 0 rgba(38, 38, 58, 0.85);
 }
 
-.demo-banner-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #8a6100;
-  margin-bottom: 6rpx;
+.pill-hover {
+  transform: translate(2rpx, 2rpx);
+  box-shadow: 1rpx 1rpx 0 rgba(38, 38, 58, 0.85);
 }
 
-.demo-banner-text {
-  font-size: 23rpx;
-  color: #a37b1a;
-  line-height: 1.6;
+/* 可点行的按压反馈 */
+.row-press {
+  opacity: 0.7;
 }
 
 /* ---------- 今日课程 ---------- */
@@ -72,29 +71,46 @@
 .session {
   display: flex;
   align-items: center;
-  padding: 22rpx 0;
-  border-top: 1rpx solid #f0f1f5;
+  padding: 20rpx 0;
+  border-top: 2rpx dashed #e3e3ec;
 }
 
 .session:first-of-type {
   border-top: none;
 }
 
+/* 节次糖果贴片 */
 .session-time {
-  width: 110rpx;
+  width: 108rpx;
   text-align: center;
   flex-shrink: 0;
-  padding-right: 20rpx;
-  border-right: 1rpx solid #f0f1f5;
+  padding: 14rpx 0;
+  border-radius: 16rpx;
+  border: 2rpx solid #26263a;
+  box-shadow: 3rpx 3rpx 0 rgba(38, 38, 58, 0.8);
+  box-sizing: border-box;
   margin-right: 24rpx;
 }
 
 .session-section {
-  font-size: 34rpx;
+  font-size: 30rpx;
   font-weight: 700;
-  color: #6b5ce7;
   line-height: 1.2;
 }
+
+.session-unit {
+  font-size: 18rpx;
+  opacity: 0.75;
+  margin-top: 2rpx;
+}
+
+/* 节次贴片按序轮换糖果色（wxml 里 tint-c{{index % 6}}） */
+.tint-c0 { background: #e7defc; color: #5546a8; }
+.tint-c1 { background: #d9e8fd; color: #2f5fa8; }
+.tint-c2 { background: #d3f2e0; color: #1f7a4d; }
+.tint-c3 { background: #fdeec2; color: #8a6d1a; }
+.tint-c4 { background: #fbdcec; color: #a83e7d; }
+.tint-c5 { background: #ffe3cc; color: #a35422; }
 
 .session-body {
   flex: 1;
@@ -105,31 +121,29 @@
 
 .notice {
   padding: 16rpx 0;
-  border-top: 1rpx solid #f0f1f5;
+  border-top: 2rpx dashed #e3e3ec;
 }
 
 .notice:first-of-type {
   border-top: none;
 }
 
-/* ---------- 快捷入口 ---------- */
+/* ---------- 快捷入口：糖果贴纸 ---------- */
 
 .quick-grid {
   display: flex;
-  gap: 16rpx;
+  gap: 20rpx;
 }
 
 .quick-tile {
   flex: 1;
   min-width: 0;
   position: relative;
-  background: #f7f8fc;
-  border-radius: 20rpx;
+  border-radius: 18rpx;
+  border: 2rpx solid #26263a;
+  box-shadow: 4rpx 4rpx 0 rgba(38, 38, 58, 0.85);
   padding: 24rpx;
-}
-
-.quick-tile-hover {
-  opacity: 0.75;
+  box-sizing: border-box;
 }
 
 .quick-icon {
@@ -140,25 +154,19 @@
 
 .quick-title {
   font-size: 28rpx;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .quick-desc {
   font-size: 22rpx;
-  color: #9aa0ac;
+  opacity: 0.75;
   margin-top: 4rpx;
-}
-
-.quick-badge {
-  position: absolute;
-  top: 20rpx;
-  right: 20rpx;
 }
 
 /* ---------- 开源仓库 ---------- */
 
 .repo {
-  margin-top: 24rpx;
+  margin-top: 20rpx;
   padding: 20rpx 8rpx;
   text-align: center;
 }

@@ -13,6 +13,7 @@
   <view
     wx:if="{{!loading && !error && today.demo}}"
     class="demo-banner"
+    hover-class="sticker-hover"
     bindtap="goBind"
   >
     <view class="demo-banner-icon">👀</view>
@@ -23,29 +24,29 @@
   </view>
 
   <!-- 加载中 -->
-  <view wx:if="{{loading}}" class="card">
+  <view wx:if="{{loading}}" class="sticker">
     <view class="empty">
       <view class="empty-desc">正在加载…</view>
     </view>
   </view>
 
   <!-- 加载失败 -->
-  <view wx:elif="{{error}}" class="card">
+  <view wx:elif="{{error}}" class="sticker">
     <view class="empty">
       <view class="empty-icon">⚠️</view>
       <view class="empty-title">加载失败</view>
       <view class="empty-desc">{{error}}</view>
-      <button class="btn-primary" bindtap="load">重试</button>
+      <button class="btn-primary btn-sticker" hover-class="btn-sticker-hover" bindtap="load">重试</button>
     </view>
   </view>
 
   <block wx:else>
 
     <!-- 今日课程 -->
-    <view class="card">
+    <view class="sticker">
       <view class="card-head">
-        <view class="card-title">今日课程</view>
-        <view class="muted" bindtap="goSchedule">整周课表 ›</view>
+        <view class="sticker-title">今日课程</view>
+        <view class="link-pill" hover-class="pill-hover" bindtap="goSchedule">整周课表 ›</view>
       </view>
 
       <!-- 假期 -->
@@ -62,12 +63,13 @@
           wx:for="{{today.sessions}}"
           wx:key="index"
           class="session"
+          hover-class="row-press"
           data-session="{{item}}"
           bindtap="showSession"
         >
-          <view class="session-time">
+          <view class="session-time tint-c{{index % 6}}">
             <view class="session-section">{{item.startSection}}-{{item.endSection}}</view>
-            <view class="muted">节</view>
+            <view class="session-unit">节</view>
           </view>
           <view class="session-body">
             <view class="strong ellipsis">{{item.courseName}}</view>
@@ -90,14 +92,14 @@
         <view class="empty-icon">📚</view>
         <view class="empty-title">未绑定任何平台</view>
         <view class="empty-desc">绑定后让行程一目了然。也可以直接手动粘贴课表，不用交出账号。</view>
-        <button class="btn-primary" bindtap="goBind">立即绑定</button>
+        <button class="btn-primary btn-sticker" hover-class="btn-sticker-hover" bindtap="goBind">立即绑定</button>
       </view>
     </view>
 
     <!-- 更新公告 -->
-    <view class="card">
+    <view class="sticker">
       <view class="card-head">
-        <view class="card-title">更新公告</view>
+        <view class="sticker-title">更新公告</view>
         <view class="muted" wx:if="{{announcements.length > 0}}">
           {{announcements[0].publishedAt}}
         </view>
@@ -112,19 +114,19 @@
     </view>
 
     <!-- 快捷入口 -->
-    <view class="card">
+    <view class="sticker">
       <view class="card-head">
-        <view class="card-title">快捷入口</view>
+        <view class="sticker-title">快捷入口</view>
       </view>
 
       <view class="quick-grid">
-        <view class="quick-tile" hover-class="quick-tile-hover" bindtap="goSchedule">
+        <view class="quick-tile tint-blue" hover-class="sticker-hover" bindtap="goSchedule">
           <view class="quick-icon">📅</view>
           <view class="quick-title">课表查询</view>
           <view class="quick-desc">整周课程表</view>
         </view>
 
-        <view class="quick-tile" hover-class="quick-tile-hover" bindtap="goElectricity">
+        <view class="quick-tile tint-yellow" hover-class="sticker-hover" bindtap="goElectricity">
           <view class="quick-icon">💡</view>
           <view class="quick-title">宿舍用电</view>
           <view class="quick-desc">余额与用电查询</view>
