@@ -60,9 +60,10 @@ function clearToken() {
 /**
  * @param {string} path   形如 '/api/schedule/today'
  * @param {object} options { method, data }
+ * @param {boolean} retried  内部用：登录态失效自动重登后重放，只补一次
  * @returns {Promise<any>} 直接 resolve 信封里的 data；业务失败则 reject 带 message 的 Error
  */
-function request(path, options = {}) {
+function request(path, options = {}, retried) {
   const method = (options.method || 'GET').toUpperCase();
   const data = options.data || {};
 
@@ -75,6 +76,12 @@ function request(path, options = {}) {
         const message = body && body.message ? body.message : `请求失败（HTTP ${res.statusCode}）`;
         if (res.statusCode === 401) {
           clearToken();
+          // token 失效（比如本地联调换到云端、云端重启换密钥）自动重登一次再重放，
+          // 别让用户看到"登录已过期"还得手动点重试。
+          if (!retried) {
+            reloginAndRetry(path, options).then(resolve, reject);
+            return;
+          }
         }
         reject(new Error(message));
         return;
@@ -88,6 +95,10 @@ function request(path, options = {}) {
       if (body.code !== 0) {
         if (body.code === 40100) {
           clearToken();
+          if (!retried) {
+            reloginAndRetry(path, options).then(resolve, reject);
+            return;
+          }
         }
         reject(new Error(body.message || '请求失败'));
         return;
@@ -131,6 +142,11 @@ function request(path, options = {}) {
       });
     }
   });
+}
+
+/** 清掉失效 token → 强制重登 → 重放原请求（只补一次，防止死循环）。 */
+function reloginAndRetry(path, options) {
+  return ensureLogin(true).then(() => request(path, options, true));
 }
 
 function describeNetworkError(err) {
