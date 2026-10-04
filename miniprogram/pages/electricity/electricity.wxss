@@ -1,184 +1,35 @@
+/* 电费页：待开发占位。真数据通道（建行会话接力）在后端保留着，
+   接口能自动化给普通用户用的时候把页面接回去就行。 */
+
 .page {
   padding-top: 24rpx;
 }
 
-/* ---------- 余额主卡 ---------- */
-
-.balance-hero {
-  text-align: center;
-  padding: 24rpx 0 8rpx;
-}
-
-.balance-num {
-  font-size: 88rpx;
-  font-weight: 700;
-  color: #6b5ce7;
-  line-height: 1.1;
-}
-
-.balance-unit {
-  font-size: 30rpx;
-  color: #6b5ce7;
-  margin-left: 8rpx;
-}
-
-.meta-row {
+.stage {
+  min-height: 70vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 20rpx;
-}
-
-.link-btn {
-  color: #6b5ce7;
-  font-size: 27rpx;
-  padding: 8rpx 20rpx;
-  border: 1rpx solid #d9d5f5;
-  border-radius: 999rpx;
-}
-
-/* ---------- 当前读数 / 通用 ---------- */
-
-.now-row {
-  display: flex;
-  gap: 16rpx;
-  margin-top: 8rpx;
-}
-
-.now-cell {
-  flex: 1;
-  min-width: 0;
-  background: #f7f8fc;
-  border-radius: 20rpx;
-  padding: 24rpx 20rpx;
+  justify-content: center;
   text-align: center;
+  padding: 0 48rpx;
 }
 
-.now-num {
-  font-size: 44rpx;
+.baby {
+  width: 360rpx;
+  border-radius: 24rpx;
+  margin-bottom: 48rpx;
+}
+
+.title {
+  font-size: 36rpx;
   font-weight: 700;
-  color: #6b5ce7;
-  line-height: 1.2;
-  margin-bottom: 8rpx;
+  color: #222;
+  margin-bottom: 20rpx;
 }
 
-.now-num--small {
-  font-size: 28rpx;
-  padding: 8rpx 0;
-}
-
-.diff {
-  margin-top: 20rpx;
-  text-align: center;
-}
-
-/* ---------- 会话过期横幅 ---------- */
-
-.expire-banner {
-  margin-top: 24rpx;
-  background: #fdf3f2;
-  border: 1rpx solid #f5d5d2;
-  border-radius: 18rpx;
-  padding: 22rpx 24rpx;
-  font-size: 25rpx;
-  color: #a3554d;
-  line-height: 1.6;
-}
-
-.btn-compact {
-  margin-top: 18rpx;
-  font-size: 27rpx;
-  padding: 6rpx 0;
-}
-
-/* ---------- 手动录入 ---------- */
-
-.local-latest {
+.muted {
   font-size: 26rpx;
-}
-
-.input-row {
-  display: flex;
-  gap: 16rpx;
-  margin: 24rpx 0;
-}
-
-.input-cell {
-  flex: 1;
-  min-width: 0;
-}
-
-.input {
-  width: 100%;
-  background: #f7f8fc;
-  border-radius: 18rpx;
-  padding: 20rpx 24rpx;
-  box-sizing: border-box;
-  font-size: 30rpx;
-  margin-top: 12rpx;
-}
-
-.why-tip {
-  margin-top: 20rpx;
-  font-size: 22rpx;
-  line-height: 1.7;
-  text-align: center;
-}
-
-.btn-secondary {
-  background: #f0eefb;
-  color: #6b5ce7;
-  font-size: 29rpx;
-}
-
-.local-records {
-  margin-top: 12rpx;
-}
-
-/* ---------- 历史 ---------- */
-
-.rec-row {
-  display: flex;
-  align-items: center;
-  padding: 22rpx 0;
-  border-top: 1rpx solid #f0f1f5;
-}
-
-.rec-row:first-of-type {
-  border-top: none;
-}
-
-.rec-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.rec-main {
-  font-size: 29rpx;
-  font-weight: 500;
-  margin-bottom: 4rpx;
-}
-
-.rec-del {
-  font-size: 20rpx;
-  flex-shrink: 0;
-  padding-left: 16rpx;
-}
-
-.rec-diff {
-  flex-shrink: 0;
-  font-size: 25rpx;
-  font-weight: 600;
-  padding: 6rpx 16rpx;
-  border-radius: 999rpx;
-}
-
-.rec-diff.up {
-  color: #2f9e63;
-  background: #e9f7ef;
-}
-
-.rec-diff.down {
-  color: #c2564a;
-  background: #fdf1ef;
+  color: #999;
+  line-height: 1.8;
 }
