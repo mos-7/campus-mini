@@ -1,0 +1,178 @@
+.page {
+  padding-top: 24rpx;
+}
+
+/* ---------- 平台卡片 ---------- */
+
+.plat-name {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.plat-desc {
+  margin-top: 12rpx;
+  line-height: 1.6;
+}
+
+.plat-meta {
+  margin-top: 8rpx;
+}
+
+.error-text {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #d64545;
+  background: #fdf2f2;
+  border-radius: 12rpx;
+  padding: 12rpx 16rpx;
+  line-height: 1.5;
+}
+
+.plat-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+/* WeChat 的 button 默认 display:block 会撑满整行，这里强制成内容宽度 */
+.plat-actions button {
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.btn-sm {
+  padding: 16rpx 48rpx;
+  font-size: 28rpx;
+  width: auto;
+  display: inline-block;
+}
+
+.btn-danger {
+  color: #d64545;
+  background: #fdf2f2;
+}
+
+/* ---------- 绑定面板 ---------- */
+
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(20, 22, 34, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+}
+
+.panel {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 36rpx 36rpx 0 0;
+  padding: 40rpx 40rpx 56rpx;
+  box-sizing: border-box;
+}
+
+.panel-head {
+  margin-bottom: 24rpx;
+}
+
+.panel-title {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.panel-close {
+  color: #9aa0ac;
+  font-size: 36rpx;
+  padding: 0 8rpx;
+}
+
+.panel-tip {
+  line-height: 1.7;
+  margin-bottom: 24rpx;
+}
+
+.panel-tip-sample {
+  margin-top: 12rpx;
+  color: #6b5ce7;
+  font-size: 22rpx;
+  word-break: break-all;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  background: #f7f8fc;
+  border-radius: 18rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  margin-bottom: 20rpx;
+}
+
+.textarea {
+  height: 200rpx;
+}
+
+.textarea-tall {
+  height: 340rpx;
+}
+
+.panel-aux {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12rpx;
+}
+
+.panel-submit {
+  margin-top: 12rpx;
+}
+
+.panel-foot {
+  margin-top: 24rpx;
+  line-height: 1.7;
+  font-size: 22rpx;
+}
+
+/* ---------- 同步进度 ---------- */
+
+.sync-box {
+  width: 560rpx;
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 48rpx 40rpx;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.sync-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 28rpx;
+  text-align: center;
+}
+
+.progress-track {
+  height: 16rpx;
+  border-radius: 999rpx;
+  background: #f0f1f5;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #8b7ef5, #6b5ce7);
+  transition: width 0.3s ease;
+}
+
+.sync-msg {
+  margin-top: 20rpx;
+  text-align: center;
+  line-height: 1.6;
+}

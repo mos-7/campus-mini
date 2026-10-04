@@ -207,6 +207,33 @@ const api = {
 
   announcements: () => request('/api/announcements'),
 
+  // ---------------- 校园用电 ----------------
+
+  /** 宿舍绑定状态：{ bound, dorm: {campus, building, floor, room} | null } */
+  electricityStatus: () => request('/api/electricity/status'),
+
+  /** 四级联动选项。level ∈ campus/building/floor/room，后三级带上级选中值。 */
+  electricityOptions: (level, campus, building, floor) => {
+    const params = ['level=' + encodeURIComponent(level)];
+    if (campus) {
+      params.push('campus=' + encodeURIComponent(campus));
+    }
+    if (building) {
+      params.push('building=' + encodeURIComponent(building));
+    }
+    if (floor) {
+      params.push('floor=' + encodeURIComponent(floor));
+    }
+    return request('/api/electricity/options?' + params.join('&'));
+  },
+
+  bindDorm: (campus, building, floor, room) =>
+    request('/api/electricity/bind', { method: 'POST', data: { campus, building, floor, room } }),
+
+  unbindDorm: () => request('/api/electricity/bind', { method: 'DELETE' }),
+
+  electricityBalance: () => request('/api/electricity/balance'),
+
   /**
    * 发起同步并轮询到结束。
    *

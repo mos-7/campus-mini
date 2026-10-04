@@ -1,0 +1,194 @@
+.page {
+  padding-top: 24rpx;
+}
+
+/* ---------- 顶部页签 ---------- */
+
+.seg {
+  display: flex;
+  background: #ececf3;
+  border-radius: 24rpx;
+  padding: 8rpx;
+  margin: 0 24rpx 24rpx;
+}
+
+.seg-item {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  border-radius: 18rpx;
+}
+
+.seg-on {
+  background: #ffffff;
+  box-shadow: 0 4rpx 12rpx rgba(31, 34, 51, 0.06);
+}
+
+.seg-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #8a8fa3;
+}
+
+.seg-on .seg-title {
+  color: #6b5ce7;
+}
+
+.seg-sub {
+  font-size: 20rpx;
+  color: #b4b8c6;
+  margin-top: 2rpx;
+}
+
+/* ---------- 说明卡 ---------- */
+
+.intro-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.intro-desc {
+  margin-top: 12rpx;
+  line-height: 1.6;
+}
+
+/* ---------- 生效徽标 ---------- */
+
+.live-pill {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  font-size: 22rpx;
+  color: #22a06b;
+  background: #e8f8ef;
+  border-radius: 999rpx;
+  padding: 6rpx 18rpx;
+}
+
+.live-pill::before {
+  content: '';
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #22a06b;
+  margin-right: 10rpx;
+}
+
+/* ---------- 预设卡 ---------- */
+
+.preset {
+  border: 2rpx solid transparent;
+}
+
+/* 生效中的卡：紫描边 + 微紫底 */
+.preset-on {
+  border-color: #6b5ce7;
+  background: #fbfaff;
+}
+
+.preset-name {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.preset-tag {
+  font-size: 22rpx;
+  color: #9aa0ac;
+}
+
+.preset-desc {
+  margin-top: 8rpx;
+}
+
+.times {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.time-cell {
+  flex: 1;
+  background: #f7f8fc;
+  border-radius: 16rpx;
+  padding: 14rpx 16rpx;
+  min-width: 0;
+}
+
+.preset-on .time-cell {
+  background: #f1effd;
+}
+
+.time-val {
+  font-size: 24rpx;
+  font-weight: 600;
+  margin-top: 6rpx;
+  white-space: nowrap;
+}
+
+.preset-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 28rpx;
+}
+
+.preset-actions button {
+  flex: 1;
+  width: auto;
+  margin: 0;
+  border-radius: 18rpx;
+}
+
+/* 当前生效中：置灰不可点（button disabled 会叠加全局灰样式） */
+.preset-btn-current {
+  background: #ececf3;
+  color: #9aa0ac;
+}
+
+/* ---------- 自定义 ---------- */
+
+.cus-list {
+  margin-top: 8rpx;
+}
+
+.cus-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26rpx 0;
+  border-top: 1rpx solid #f0f1f5;
+}
+
+.cus-row:first-child {
+  border-top: none;
+}
+
+.cus-label {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.cus-picker {
+  background: #f7f8fc;
+  border-radius: 14rpx;
+  padding: 14rpx 24rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  min-width: 150rpx;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.cus-picker-empty {
+  color: #b4b8c6;
+  font-weight: 400;
+}
+
+.cus-sep {
+  color: #9aa0ac;
+  margin: 0 12rpx;
+}
+
+.cus-save {
+  margin-top: 28rpx;
+  border-radius: 18rpx;
+}

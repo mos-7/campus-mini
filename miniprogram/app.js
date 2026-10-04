@@ -3,7 +3,9 @@ const api = require('./utils/api');
 App({
   globalData: {
     user: null,
-    loginError: ''
+    loginError: '',
+    autoSyncBusy: false,  // 静默同步正在跑，防止重复发起
+    autoSyncedAt: 0       // 本次会话已经自动同步过的时间戳（每次冷启动最多跑一次）
   },
 
   onLaunch() {

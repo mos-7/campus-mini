@@ -10,11 +10,10 @@ const app = getApp();
  */
 const FEATURE_META = {
   SCHEDULE: { icon: '📅', title: '课表', desc: '整周课程表', route: '/pages/schedule/schedule', isTab: true },
-  COURSE_LIST: { icon: '📚', title: '课程列表', desc: '已选课程', route: '/pages/schedule/schedule', isTab: true },
   GRADE: { icon: '📊', title: '成绩查询', desc: '学期成绩', route: '' },
   EXAM: { icon: '📝', title: '考试安排', desc: '考场与时间', route: '' },
   CARD_BALANCE: { icon: '💳', title: '一卡通余额', desc: '余额与消费', route: '' },
-  ELECTRICITY: { icon: '💡', title: '宿舍用电', desc: '用电查询', route: '' },
+  ELECTRICITY: { icon: '💡', title: '宿舍用电', desc: '余额与用电', route: '/pages/electricity/electricity', always: true },
   RUN_RECORD: { icon: '🏃', title: '校园跑记录', desc: '跑量查询', route: '' }
 };
 
@@ -63,7 +62,8 @@ Page({
             desc: meta.desc,
             route: meta.route,
             isTab: !!meta.isTab,
-            available: !!available[code]
+            // always: 不依赖适配器能力、页面自己管绑定的功能（如宿舍用电）
+            available: !!available[code] || !!meta.always
           };
         });
 
@@ -104,6 +104,6 @@ Page({
   },
 
   goBind() {
-    wx.switchTab({ url: '/pages/profile/profile' });
+    wx.navigateTo({ url: '/pages/bindings/bindings' });
   }
 });

@@ -1,0 +1,95 @@
+<view class="page">
+
+  <!-- 顶部页签 -->
+  <view class="seg">
+    <view class="seg-item {{tab === 'preset' ? 'seg-on' : ''}}" data-tab="preset" bindtap="switchTab">
+      <view class="seg-title">推荐作息</view>
+      <view class="seg-sub">三套常见高校作息</view>
+    </view>
+    <view class="seg-item {{tab === 'custom' ? 'seg-on' : ''}}" data-tab="custom" bindtap="switchTab">
+      <view class="seg-title">自定义</view>
+      <view class="seg-sub">按学校铃声微调</view>
+    </view>
+  </view>
+
+  <!-- ============ 推荐作息 ============ -->
+  <block wx:if="{{tab === 'preset'}}">
+
+    <view class="card intro-card">
+      <view class="row between">
+        <view class="intro-title">选择一套推荐作息</view>
+        <view class="live-pill">正在使用{{activeLabel === '未设置' ? '默认' : activeLabel}}</view>
+      </view>
+      <view class="muted intro-desc">点「使用这套」立即生效；也可以拿任意一套当模板，去自定义里微调。</view>
+    </view>
+
+    <view
+      wx:for="{{presets}}"
+      wx:key="id"
+      class="card preset {{item.active ? 'preset-on' : ''}}"
+    >
+      <view class="row between">
+        <view class="row gap">
+          <view class="preset-name">{{item.name}}</view>
+          <view class="preset-tag">{{item.tag}}</view>
+        </view>
+        <view wx:if="{{item.active}}" class="live-pill">正在生效</view>
+      </view>
+
+      <view class="muted preset-desc">{{item.desc}}</view>
+
+      <view class="times">
+        <view wx:for="{{item.blocks}}" wx:for-item="b" wx:key="label" class="time-cell">
+          <view class="muted">{{b.label}}</view>
+          <view class="time-val">{{b.time}}</view>
+        </view>
+      </view>
+
+      <view class="preset-actions">
+        <button
+          wx:if="{{!item.active}}"
+          class="btn-primary preset-btn"
+          data-id="{{item.id}}"
+          bindtap="apply"
+        >使用这套</button>
+        <button wx:else class="preset-btn preset-btn-current" disabled>当前生效中</button>
+        <button class="btn-ghost preset-btn" data-id="{{item.id}}" bindtap="useAsTemplate">以此为模板自定义</button>
+      </view>
+    </view>
+
+  </block>
+
+  <!-- ============ 自定义 ============ -->
+  <block wx:else>
+
+    <view class="card">
+      <view class="row between">
+        <view class="intro-title">自定义作息</view>
+        <view wx:if="{{customActive}}" class="live-pill">正在生效</view>
+      </view>
+      <view class="muted intro-desc">
+        按你们学校的上下课铃声，分别设置三个时段的起止时间。改完记得保存。
+      </view>
+
+      <view class="cus-list">
+        <view wx:for="{{customBlocks}}" wx:key="key" class="cus-row">
+          <view class="cus-label">{{item.label}}</view>
+          <view class="row">
+            <picker mode="time" value="{{item.start}}" data-key="{{item.key}}" data-field="start" bindchange="pickTime">
+              <view class="cus-picker {{item.start ? '' : 'cus-picker-empty'}}">{{item.start || '开始'}}</view>
+            </picker>
+            <view class="cus-sep">~</view>
+            <picker mode="time" value="{{item.end}}" data-key="{{item.key}}" data-field="end" bindchange="pickTime">
+              <view class="cus-picker {{item.end ? '' : 'cus-picker-empty'}}">{{item.end || '结束'}}</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+
+      <button class="btn-primary cus-save" bindtap="saveCustom">保存并使用</button>
+    </view>
+
+  </block>
+
+  <view class="page-bottom-space"></view>
+</view>

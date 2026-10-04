@@ -1,66 +1,105 @@
+/* 课表页 · 描边贴纸风
+   白底 + 深色描边 + 硬偏移阴影 + 糖果色，格线用虚线 */
+
 .page {
   padding-top: 24rpx;
 }
 
-/* ---------- 周次切换 ---------- */
+/* ---------- 描边胶囊（通用） ---------- */
 
-.weekbar {
+.pill {
+  background: #ffffff;
+  border: 2rpx solid #26263a;
+  border-radius: 18rpx;
+  box-shadow: 4rpx 4rpx 0 rgba(38, 38, 58, 0.85);
+  box-sizing: border-box;
+}
+
+/* 按下去：阴影收回、微微位移 */
+.pill-hover {
+  transform: translate(2rpx, 2rpx);
+  box-shadow: 2rpx 2rpx 0 rgba(38, 38, 58, 0.85);
+}
+
+.toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 48rpx 20rpx;
+  gap: 16rpx;
+  padding: 0 24rpx;
+  margin-bottom: 24rpx;
 }
 
-.weekbar-arrow {
-  width: 72rpx;
-  height: 72rpx;
+/* ---------- 顶部：今天 + 刷新 ---------- */
+
+.pill-date {
+  padding: 16rpx 26rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2233;
+}
+
+.pill-refresh {
+  width: 74rpx;
+  height: 74rpx;
+  margin-left: auto;
   border-radius: 50%;
-  background: #ffffff;
-  color: #6b5ce7;
-  font-size: 48rpx;
+  background: #fdeec2;
+  text-align: center;
   line-height: 68rpx;
+  font-size: 38rpx;
+  color: #1f2233;
+}
+
+/* ---------- 周次切换 ---------- */
+
+.pill-arrow {
+  width: 74rpx;
+  height: 74rpx;
+  border-radius: 20rpx;
   text-align: center;
-  box-shadow: 0 4rpx 16rpx rgba(31, 34, 51, 0.06);
-}
-
-.weekbar-main {
-  text-align: center;
-  flex: 1;
-}
-
-.weekbar-title {
-  font-size: 36rpx;
-  font-weight: 700;
-}
-
-/* ---------- 周次 chips ---------- */
-
-.chips {
-  white-space: nowrap;
-  padding: 0 24rpx 24rpx;
-  display: flex;
-}
-
-.chip {
-  display: inline-block;
-  min-width: 60rpx;
-  height: 60rpx;
-  line-height: 60rpx;
-  text-align: center;
-  border-radius: 999rpx;
-  background: #ffffff;
-  color: #6b6b7b;
-  font-size: 26rpx;
-  margin-right: 12rpx;
-  padding: 0 8rpx;
-  /* scroll-x 里必须禁止收缩，否则 20 个周次会被压缩成一条 */
+  line-height: 68rpx;
+  font-size: 42rpx;
+  color: #1f2233;
   flex-shrink: 0;
 }
 
-.chip-active {
-  background: #6b5ce7;
-  color: #ffffff;
-  font-weight: 600;
+.week-picker {
+  flex: 1;
+  min-width: 0;
+  display: block;
+}
+
+.pill-week {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18rpx 20rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1f2233;
+  background: #dce9fd;
+}
+
+.pill-caret {
+  margin-left: 12rpx;
+  font-size: 26rpx;
+  color: #3a3a4a;
+}
+
+/* ---------- 贴纸卡（加载/错误/空态） ---------- */
+
+.sticker-card {
+  background: #ffffff;
+  border: 2rpx solid #26263a;
+  border-radius: 24rpx;
+  box-shadow: 6rpx 6rpx 0 rgba(38, 38, 58, 0.85);
+  margin: 0 24rpx 24rpx;
+  padding: 32rpx;
+}
+
+.btn-sticker {
+  border: 2rpx solid #26263a;
+  box-shadow: 4rpx 4rpx 0 rgba(38, 38, 58, 0.85);
 }
 
 /* ---------- 演示数据横幅 ---------- */
@@ -70,9 +109,10 @@
   align-items: flex-start;
   margin: 0 24rpx 24rpx;
   padding: 24rpx 28rpx;
-  border-radius: 24rpx;
-  background: #fff8e8;
-  border: 1rpx solid #ffe6b0;
+  border-radius: 20rpx;
+  background: #fffdf4;
+  border: 2rpx solid #26263a;
+  box-shadow: 5rpx 5rpx 0 rgba(38, 38, 58, 0.85);
 }
 
 .demo-banner-icon {
@@ -89,35 +129,30 @@
 .demo-banner-title {
   font-size: 28rpx;
   font-weight: 600;
-  color: #8a6100;
+  color: #1f2233;
   margin-bottom: 6rpx;
 }
 
 .demo-banner-text {
   font-size: 23rpx;
-  color: #a37b1a;
+  color: #9aa0ac;
   line-height: 1.6;
 }
 
 /* ---------- 网格 ---------- */
 
-.grid-card {
-  padding: 24rpx 16rpx 16rpx;
-  overflow: hidden;
+.board {
+  padding: 0 24rpx;
 }
 
 .head {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   padding-bottom: 16rpx;
-  border-bottom: 1rpx solid #f0f1f5;
 }
 
 .axis-head {
   width: 56rpx;
-  text-align: center;
-  font-size: 22rpx;
-  color: #9aa0ac;
   flex-shrink: 0;
 }
 
@@ -134,23 +169,49 @@
 }
 
 .day-label {
-  font-size: 26rpx;
-  font-weight: 600;
+  display: inline-block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #3a3a4a;
+  padding: 6rpx 22rpx;
+  border-radius: 999rpx;
+}
+
+/* 今天：黄色描边小胶囊 */
+.day-head-today .day-label {
+  background: #fdeec2;
+  border: 2rpx solid #26263a;
+  box-shadow: 3rpx 3rpx 0 rgba(38, 38, 58, 0.85);
+  color: #1f2233;
 }
 
 .day-date {
   font-size: 20rpx;
   color: #9aa0ac;
-}
-
-.day-head-today .day-label,
-.day-head-today .day-date {
-  color: #6b5ce7;
+  margin-top: 4rpx;
 }
 
 .grid {
   display: flex;
   position: relative;
+}
+
+/* 横向浅行线：每个 ROW_HEIGHT 一条（间距和 JS 里的 ROW_HEIGHT 保持一致） */
+.grid::after {
+  content: '';
+  position: absolute;
+  left: 56rpx;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 98rpx,
+    #ececf2 98rpx,
+    #ececf2 100rpx
+  );
 }
 
 .axis {
@@ -160,34 +221,46 @@
 
 .axis-cell {
   text-align: center;
-  font-size: 22rpx;
-  color: #b6bac6;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #3a3a4a;
   padding-top: 8rpx;
+  box-sizing: border-box;
 }
 
 .day-col {
   flex: 1;
   position: relative;
   min-width: 0;
-  border-left: 1rpx solid #f7f7fb;
+  border-left: 2rpx dashed #e3e3ec;
 }
 
-.day-col-today {
-  background: #faf9ff;
+.days .day-col:last-child {
+  border-right: 2rpx dashed #e3e3ec;
 }
 
-/* 课表方块：位置和高度由 JS 按节次算出来 */
+/* ---------- 课表方块 ---------- */
+
 .block {
   position: absolute;
   left: 4rpx;
   right: 4rpx;
   border-radius: 14rpx;
-  background: linear-gradient(150deg, #8b7ef5, #6b5ce7);
-  color: #ffffff;
+  border: 2rpx solid #26263a;
+  box-shadow: 3rpx 3rpx 0 rgba(38, 38, 58, 0.8);
   padding: 10rpx 8rpx;
   overflow: hidden;
   box-sizing: border-box;
+  z-index: 1;
 }
+
+/* 糖果色盘：与 schedule.js 的 BLOCK_PALETTES 一一对应 */
+.block-c0 { background: #e7defc; color: #5546a8; }
+.block-c1 { background: #d9e8fd; color: #2f5fa8; }
+.block-c2 { background: #d3f2e0; color: #1f7a4d; }
+.block-c3 { background: #fdeec2; color: #8a6d1a; }
+.block-c4 { background: #fbdcec; color: #a83e7d; }
+.block-c5 { background: #ffe3cc; color: #a35422; }
 
 .block-name {
   font-size: 22rpx;
@@ -198,7 +271,7 @@
 
 .block-loc {
   font-size: 18rpx;
-  opacity: 0.85;
+  opacity: 0.8;
   margin-top: 4rpx;
   word-break: break-all;
 }
@@ -206,6 +279,6 @@
 /* ---------- 底部提示 ---------- */
 
 .hint {
-  padding: 0 48rpx 24rpx;
+  padding: 20rpx 48rpx 24rpx;
   line-height: 1.7;
 }

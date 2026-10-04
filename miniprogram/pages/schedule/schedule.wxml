@@ -1,43 +1,50 @@
 <view class="page">
 
-  <!-- 周次切换 -->
-  <view class="weekbar">
-    <view class="weekbar-arrow" bindtap="prevWeek">‹</view>
-    <view class="weekbar-main" bindtap="backToCurrent">
-      <view class="weekbar-title">第 {{week}} 周</view>
-      <view class="muted">{{rangeText}}</view>
-    </view>
-    <view class="weekbar-arrow" bindtap="nextWeek">›</view>
+  <!-- 顶部：今天 + 刷新 -->
+  <view class="toolbar">
+    <view class="pill pill-date">🕐 {{todayText}}</view>
+    <view class="pill pill-refresh" hover-class="pill-hover" bindtap="backToCurrent">↻</view>
   </view>
 
-  <!-- 周次快捷选择 -->
-  <scroll-view class="chips" scroll-x enable-flex>
-    <view
-      wx:for="{{weekChips}}"
-      wx:key="w"
-      class="chip {{item.active ? 'chip-active' : ''}}"
-      data-week="{{item.w}}"
-      bindtap="pickWeek"
-    >{{item.w}}</view>
-  </scroll-view>
+  <!-- 周次切换：箭头 + 周Picker胶囊 -->
+  <view class="toolbar">
+    <view class="pill pill-arrow" hover-class="pill-hover" bindtap="prevWeek">‹</view>
 
-  <view wx:if="{{loading}}" class="card">
+    <picker
+      class="week-picker"
+      mode="selector"
+      range="{{weekLabels}}"
+      value="{{weekIndex}}"
+      bindchange="pickWeek"
+    >
+      <view class="pill pill-week" hover-class="pill-hover">
+        <text>第 {{week}} 周{{isCurrentWeek ? '（本周）' : ''}}</text>
+        <text class="pill-caret">⌄</text>
+      </view>
+    </picker>
+
+    <view class="pill pill-arrow" hover-class="pill-hover" bindtap="nextWeek">›</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="sticker-card">
     <view class="empty"><view class="empty-desc">正在加载课表…</view></view>
   </view>
 
-  <view wx:elif="{{error}}" class="card">
+  <!-- 加载失败 -->
+  <view wx:elif="{{error}}" class="sticker-card">
     <view class="empty">
       <view class="empty-icon">⚠️</view>
       <view class="empty-title">加载失败</view>
       <view class="empty-desc">{{error}}</view>
-      <button class="btn-primary" bindtap="backToCurrent">重试</button>
+      <button class="btn-primary btn-sticker" bindtap="backToCurrent">重试</button>
     </view>
   </view>
 
   <block wx:else>
 
     <!-- 演示数据横幅 -->
-    <view wx:if="{{demo}}" class="demo-banner" bindtap="goBind">
+    <view wx:if="{{demo}}" class="demo-banner" hover-class="pill-hover" bindtap="goBind">
       <view class="demo-banner-icon">👀</view>
       <view class="demo-banner-body">
         <view class="demo-banner-title">这是示例数据</view>
@@ -46,21 +53,21 @@
     </view>
 
     <!-- 没课时给个明确出口，而不是一张空网格 -->
-    <view wx:if="{{!hasSessions}}" class="card">
+    <view wx:if="{{!hasSessions}}" class="sticker-card">
       <view class="empty">
         <view class="empty-icon">🗓️</view>
         <view class="empty-title">这一周没有课</view>
         <view class="empty-desc">
           要么是还没绑定平台，要么是校历配置（campus.term.start-date）和学校对不上。
         </view>
-        <button class="btn-primary" bindtap="goBind">去绑定平台</button>
+        <button class="btn-primary btn-sticker" bindtap="goBind">去绑定平台</button>
       </view>
     </view>
 
-    <view class="card grid-card">
-      <!-- 表头：星期 + 日期 -->
+    <!-- 课表网格本体：虚线格 + 糖果色方块 -->
+    <view class="board">
       <view class="head">
-        <view class="axis-head">节</view>
+        <view class="axis-head"></view>
         <view class="days">
           <view
             wx:for="{{days}}"
@@ -73,8 +80,7 @@
         </view>
       </view>
 
-      <!-- 网格本体 -->
-      <view class="grid">
+      <view class="grid" style="height:{{gridHeight}}rpx">
         <view class="axis">
           <view
             wx:for="{{rows}}"
@@ -88,14 +94,13 @@
           <view
             wx:for="{{days}}"
             wx:key="dayOfWeek"
-            class="day-col {{item.isToday ? 'day-col-today' : ''}}"
-            style="height:{{gridHeight}}rpx"
+            class="day-col"
           >
             <view
               wx:for="{{item.blocks}}"
               wx:for-item="b"
               wx:key="key"
-              class="block"
+              class="block block-c{{b.ci}}"
               style="top:{{b.top}}rpx;height:{{b.height}}rpx"
               data-block="{{b}}"
               bindtap="showBlock"

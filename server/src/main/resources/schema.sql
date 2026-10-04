@@ -86,6 +86,16 @@ CREATE TABLE IF NOT EXISTS sync_task (
     finished_at   TIMESTAMP    NULL
 );
 
+-- 宿舍绑定（校园用电）。一个用户只绑一间，换宿舍就覆盖（user_id 做主键）。
+CREATE TABLE IF NOT EXISTS dorm_binding (
+    user_id    BIGINT       PRIMARY KEY,
+    campus     VARCHAR(64)  NOT NULL,
+    building   VARCHAR(64)  NOT NULL,
+    floor      VARCHAR(32)  NOT NULL,
+    room       VARCHAR(32)  NOT NULL,
+    updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS announcement (
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     title        VARCHAR(255) NOT NULL,

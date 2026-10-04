@@ -4,6 +4,9 @@
     "pages/schedule/schedule",
     "pages/tools/tools",
     "pages/profile/profile",
+    "pages/bindings/bindings",
+    "pages/periods/periods",
+    "pages/electricity/electricity",
     "pages/privacy/privacy"
   ],
   "window": {

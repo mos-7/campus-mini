@@ -1,10 +1,5 @@
 <view class="page">
 
-  <view class="intro">
-    <view class="intro-title">个人中心</view>
-    <view class="muted">小粥历 · 只读的个人信息查询</view>
-  </view>
-
   <view wx:if="{{loading}}" class="card">
     <view class="empty"><view class="empty-desc">正在加载…</view></view>
   </view>
@@ -20,77 +15,71 @@
 
   <block wx:else>
 
-    <!-- 服务绑定中心 -->
-    <view class="card">
-      <view class="card-head">
-        <view class="card-title">服务绑定中心</view>
-        <view class="badge {{boundCount > 0 ? 'badge-ok' : 'badge-off'}}">
-          {{boundCount}} / {{totalCount}} 已连接
-        </view>
-      </view>
-      <view class="svc-row">
-        <view
-          wx:for="{{cards}}"
-          wx:key="code"
-          class="svc-chip {{item.bound ? 'svc-on' : ''}}"
-        >
-          <view class="svc-dot"></view>
-          <view class="svc-name">{{item.name}}</view>
+    <!-- 用户卡片 -->
+    <view class="card user-card">
+      <image class="user-avatar" src="/images/mascot-avatar.jpg" mode="aspectFill" />
+      <view class="user-body">
+        <view class="row gap">
+          <view class="user-name">{{nickname}}</view>
+          <view class="user-tag {{boundCount > 0 ? 'user-tag-on' : ''}}">
+            {{boundCount > 0 ? '已连接 ' + boundCount + '/' + totalCount : '未绑定平台'}}
+          </view>
         </view>
       </view>
     </view>
 
-    <!-- 平台卡片 -->
-    <view wx:for="{{cards}}" wx:key="code" class="card">
-      <view class="row between">
-        <view class="plat-name">{{item.name}}</view>
-        <view class="badge {{item.bound ? 'badge-ok' : 'badge-off'}}">{{item.statusText}}</view>
+    <!-- 服务绑定中心：三个平台小部件，点任意一个进绑定管理页 -->
+    <view class="card">
+      <view class="svc-head">
+        <view class="svc-icon">📦</view>
+        <view class="svc-head-body">
+          <view class="svc-title">服务绑定中心</view>
+          <view class="muted ellipsis">绑定后自动同步课表，点下方平台去管理</view>
+        </view>
+        <view class="svc-count">
+          <text class="svc-count-num">{{boundCount}}</text> / {{totalCount}} 已连接
+        </view>
       </view>
 
-      <view class="muted plat-desc">{{item.description}}</view>
-
-      <view class="muted plat-meta">
-        <text>{{item.loginModeLabel}}</text>
-        <text wx:if="{{item.accountLabel}}"> · {{item.accountLabel}}</text>
-      </view>
-
-      <view wx:if="{{item.lastError}}" class="error-text">{{item.lastError}}</view>
-
-      <view class="plat-actions">
-        <button
-          wx:if="{{!item.bound}}"
-          class="btn-primary btn-sm"
-          data-card="{{item}}"
-          bindtap="openBind"
-        >绑定</button>
-
-        <block wx:else>
-          <button class="btn-ghost" data-card="{{item}}" bindtap="syncNow">立即同步</button>
-          <button class="btn-ghost btn-danger" data-card="{{item}}" bindtap="unbind">解绑</button>
-        </block>
+      <view class="svc-row">
+        <view
+          wx:for="{{cards}}"
+          wx:key="code"
+          class="svc-widget {{item.bound ? 'svc-on' : ''}}"
+          hover-class="svc-widget-hover"
+          bindtap="openBindings"
+        >
+          <view class="svc-widget-head">
+            <view class="svc-dot"></view>
+            <text class="svc-name">{{item.name}}</text>
+          </view>
+          <view class="svc-state">{{item.stateText}}</view>
+        </view>
       </view>
     </view>
 
     <!-- 课程与学习管理 -->
     <view class="card">
-      <view class="card-head">
-        <view class="card-title">课程与学习管理</view>
-      </view>
+      <view class="sec-title">课程与学习管理</view>
 
-      <view class="setting" data-what="作息时刻设置" bindtap="notReady">
-        <view class="setting-icon">⏰</view>
+      <view class="setting setting-first" bindtap="openPeriods">
+        <view class="setting-icon tint-purple">⏰</view>
         <view class="setting-body">
           <view class="setting-title">作息时刻设置</view>
           <view class="muted">自定义上下课时间与时段预设</view>
         </view>
+        <view class="setting-value">{{routineLabel}}</view>
         <view class="setting-arrow">›</view>
       </view>
 
-      <view class="setting" data-what="课表自动更新" bindtap="notReady">
-        <view class="setting-icon">🔄</view>
+      <view class="setting" bindtap="toggleAutoSync">
+        <view class="setting-icon tint-blue">🔄</view>
         <view class="setting-body">
           <view class="setting-title">课表自动更新</view>
-          <view class="muted">定时静默同步，别每次打开都去爬平台</view>
+          <view class="muted">打开小程序时，超过一天没同步就在后台静默更新</view>
+        </view>
+        <view class="setting-value {{autoSyncOn ? 'setting-value-on' : ''}}">
+          {{autoSyncOn ? '已开启' : '已关闭'}}
         </view>
         <view class="setting-arrow">›</view>
       </view>
@@ -98,12 +87,10 @@
 
     <!-- 支持与反馈 -->
     <view class="card">
-      <view class="card-head">
-        <view class="card-title">支持与反馈</view>
-      </view>
+      <view class="sec-title">支持与反馈</view>
 
-      <view class="setting" bindtap="privacy">
-        <view class="setting-icon">🔒</view>
+      <view class="setting setting-first" bindtap="privacy">
+        <view class="setting-icon tint-purple">🔒</view>
         <view class="setting-body">
           <view class="setting-title">隐私政策</view>
           <view class="muted">收集哪些信息、用来做什么、怎么存</view>
@@ -112,7 +99,7 @@
       </view>
 
       <view class="setting" bindtap="contact">
-        <view class="setting-icon">✉️</view>
+        <view class="setting-icon tint-blue">✉️</view>
         <view class="setting-body">
           <view class="setting-title">联系开发者</view>
           <view class="muted">问题反馈、删除数据 · 点此复制邮箱</view>
@@ -121,7 +108,7 @@
       </view>
 
       <view class="setting" bindtap="about">
-        <view class="setting-icon">ℹ️</view>
+        <view class="setting-icon tint-green">ℹ️</view>
         <view class="setting-body">
           <view class="setting-title">关于小粥历</view>
           <view class="muted">这个项目做什么、不做什么</view>
@@ -133,73 +120,4 @@
   </block>
 
   <view class="page-bottom-space"></view>
-</view>
-
-<!-- ================= 绑定面板 ================= -->
-<view wx:if="{{panelVisible}}" class="mask" bindtap="closePanel">
-  <view class="panel" catchtap="noop">
-    <view class="row between panel-head">
-      <view class="panel-title">绑定 {{activeCard.name}}</view>
-      <view class="panel-close" bindtap="closePanel">✕</view>
-    </view>
-
-    <!-- 手动导入模式 -->
-    <block wx:if="{{isManual}}">
-      <view class="muted panel-tip">
-        <view>每行一个上课安排，字段用逗号隔开，<text class="strong">顺序随意</text> ——</view>
-        <view>程序按内容识别哪个是星期、哪个是节次、哪个是周次。</view>
-        <view class="panel-tip-sample">示例：高等数学,张老师,周一,1-2节,1-16周,教三201</view>
-      </view>
-      <textarea
-        class="textarea textarea-tall"
-        value="{{formSecret}}"
-        bindinput="onSecretInput"
-        placeholder="在这里粘贴课表…"
-        maxlength="-1"
-      />
-      <view class="panel-aux">
-        <view class="btn-ghost" bindtap="fillSample">填入示例课表</view>
-      </view>
-    </block>
-
-    <!-- 账号密码 / Token 模式 -->
-    <block wx:else>
-      <view class="muted panel-tip">{{activeCard.description}}</view>
-      <input
-        class="input"
-        value="{{formUsername}}"
-        bindinput="onUsernameInput"
-        placeholder="学号 / 账号"
-      />
-      <textarea
-        class="textarea"
-        value="{{formSecret}}"
-        bindinput="onSecretInput"
-        placeholder="密码（或按平台提示粘贴 Token / Cookie）"
-        maxlength="-1"
-      />
-    </block>
-
-    <button
-      class="btn-primary panel-submit"
-      bindtap="submitBind"
-      disabled="{{submitting}}"
-    >{{submitting ? '正在校验…' : '确认绑定'}}</button>
-
-    <view class="muted panel-foot">
-      凭据会用 AES-GCM 加密后存到你自己的数据库。自己用没问题，
-      但如果给别人用，记得在隐私政策里写明这一点。
-    </view>
-  </view>
-</view>
-
-<!-- ================= 同步进度 ================= -->
-<view wx:if="{{syncVisible}}" class="mask">
-  <view class="sync-box">
-    <view class="sync-title">正在同步</view>
-    <view class="progress-track">
-      <view class="progress-fill" style="width:{{syncProgress}}%"></view>
-    </view>
-    <view class="muted sync-msg">{{syncProgress}}% · {{syncMessage}}</view>
-  </view>
 </view>

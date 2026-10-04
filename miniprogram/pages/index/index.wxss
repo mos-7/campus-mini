@@ -18,15 +18,13 @@
   margin: 4rpx 0;
 }
 
-.hero-sub {
-  margin-top: 8rpx;
-}
-
 .hero-avatar {
   width: 96rpx;
   height: 96rpx;
   border-radius: 32rpx;
   flex-shrink: 0;
+  /* 竖版整图用 aspectFit 塞进方盒，左右会留空 —— 垫白色和图片底色融为一体 */
+  background: #ffffff;
 }
 
 /* ---------- 演示数据横幅 ---------- */
@@ -112,6 +110,49 @@
 
 .notice:first-of-type {
   border-top: none;
+}
+
+/* ---------- 快捷入口 ---------- */
+
+.quick-grid {
+  display: flex;
+  gap: 16rpx;
+}
+
+.quick-tile {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  background: #f7f8fc;
+  border-radius: 20rpx;
+  padding: 24rpx;
+}
+
+.quick-tile-hover {
+  opacity: 0.75;
+}
+
+.quick-icon {
+  font-size: 44rpx;
+  line-height: 1;
+  margin-bottom: 14rpx;
+}
+
+.quick-title {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.quick-desc {
+  font-size: 22rpx;
+  color: #9aa0ac;
+  margin-top: 4rpx;
+}
+
+.quick-badge {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
 }
 
 /* ---------- 开源仓库 ---------- */

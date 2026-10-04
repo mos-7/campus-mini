@@ -1,0 +1,140 @@
+<view class="page">
+
+  <view wx:if="{{loading}}" class="card">
+    <view class="empty"><view class="empty-desc">正在加载…</view></view>
+  </view>
+
+  <view wx:elif="{{error}}" class="card">
+    <view class="empty">
+      <view class="empty-icon">⚠️</view>
+      <view class="empty-title">加载失败</view>
+      <view class="empty-desc">{{error}}</view>
+      <button class="btn-primary" bindtap="load">重试</button>
+    </view>
+  </view>
+
+  <block wx:else>
+
+    <!-- 状态卡 -->
+    <view class="card dorm-card">
+      <block wx:if="{{bound}}">
+        <view class="row between">
+          <view class="row gap">
+            <view class="dorm-icon">🏠</view>
+            <view>
+              <view class="dorm-name">{{dorm.campus}} · {{dorm.building}} · {{dorm.room}}</view>
+              <view class="muted">{{dorm.floor}} · 我的宿舍</view>
+            </view>
+          </view>
+          <view class="badge badge-ok">已绑定</view>
+        </view>
+        <view class="dorm-actions">
+          <view class="btn-ghost" hover-class="btn-hover" bindtap="openSheet">换宿舍</view>
+          <view class="btn-ghost dorm-unbind" hover-class="btn-hover" bindtap="unbind">解绑</view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="row between">
+          <view>
+            <view class="dorm-tag">未绑定宿舍</view>
+            <view class="muted dorm-hint">选好宿舍就能直接查电费</view>
+          </view>
+          <button class="btn-primary btn-dorm-bind" hover-class="btn-hover" bindtap="openSheet">立即绑定</button>
+        </view>
+      </block>
+    </view>
+
+    <!-- 未绑定：大空态 -->
+    <view wx:if="{{!bound}}" class="card">
+      <view class="empty">
+        <view class="empty-icon">⚡</view>
+        <view class="empty-title">尚未绑定宿舍</view>
+        <view class="empty-desc">绑定宿舍后，随时查看电费余额、剩余电量和每日用电。</view>
+        <button class="btn-primary" bindtap="openSheet">立即选择宿舍绑定</button>
+      </view>
+    </view>
+
+    <!-- 已绑定：读数 -->
+    <block wx:else>
+      <view class="card">
+        <view class="card-head">
+          <view class="card-title">用电概览</view>
+          <view class="muted" bindtap="queryBalance">{{querying ? '查询中…' : '刷新 ›'}}</view>
+        </view>
+
+        <view class="balance-main">
+          <view class="balance-num">{{reading.balanceYuan}}</view>
+          <view class="muted">电费余额（元）</view>
+        </view>
+
+        <view class="stat-row">
+          <view class="stat">
+            <view class="stat-num">{{reading.remainingKwh}}</view>
+            <view class="muted">剩余电量（度）</view>
+          </view>
+          <view class="stat">
+            <view class="stat-num">{{reading.yesterdayKwh}}</view>
+            <view class="muted">昨日用电（度）</view>
+          </view>
+          <view class="stat">
+            <view class="stat-num">{{reading.monthKwh}}</view>
+            <view class="muted">本月用电（度）</view>
+          </view>
+        </view>
+
+        <view class="muted balance-foot">
+          查询于 {{reading.timeText}}<text wx:if="{{reading.demo}}"> · 演示数据，接入学校电费平台后自动换成真实读数</text>
+        </view>
+      </view>
+    </block>
+
+  </block>
+
+  <view class="page-bottom-space"></view>
+</view>
+
+<!-- ================= 选择并绑定宿舍 ================= -->
+<view wx:if="{{sheetVisible}}" class="mask" bindtap="closeSheet">
+  <view class="panel" catchtap="noop">
+    <view class="row between panel-head">
+      <view class="panel-title">选择并绑定宿舍</view>
+      <view class="panel-close" bindtap="closeSheet">✕</view>
+    </view>
+
+    <!-- 步骤条：点前面的步骤可以回退重选 -->
+    <view class="stepbar">
+      <block wx:for="{{steps}}" wx:key="*this">
+        <view
+          class="step-chip {{index === step ? 'step-on' : (index < step ? 'step-done' : '')}}"
+          data-step="{{index}}"
+          bindtap="tapStep"
+        >{{index + 1}}.{{item}}</view>
+        <view wx:if="{{index < steps.length - 1}}" class="step-arrow">→</view>
+      </block>
+    </view>
+
+    <!-- 当前级的选项 -->
+    <scroll-view class="opt-list" scroll-y>
+      <view wx:if="{{optionsLoading}}" class="muted opt-tip">加载中…</view>
+      <view wx:elif="{{options.length === 0}}" class="muted opt-tip">没有可选项</view>
+      <view
+        wx:for="{{options}}"
+        wx:key="*this"
+        class="opt-row"
+        hover-class="opt-row-hover"
+        data-name="{{item}}"
+        bindtap="pickOption"
+      >
+        <text>{{item}}</text>
+        <text class="opt-arrow">›</text>
+      </view>
+    </scroll-view>
+
+    <button
+      class="btn-primary panel-submit"
+      disabled="{{binding || !selections[3]}}"
+      bindtap="confirmBind"
+    >{{binding ? '正在绑定…' : '确认绑定此宿舍'}}</button>
+  </view>
+</view>
