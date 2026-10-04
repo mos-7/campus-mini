@@ -2,212 +2,91 @@
   padding-top: 24rpx;
 }
 
-/* ---------- 状态卡 ---------- */
+/* ---------- 当前读数 ---------- */
 
-.dorm-icon {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 22rpx;
-  background: #f2f1fd;
-  font-size: 36rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dorm-name {
-  font-size: 30rpx;
-  font-weight: 600;
-}
-
-.dorm-tag {
-  display: inline-block;
-  font-size: 24rpx;
-  color: #6b5ce7;
-  background: #f2f1fd;
-  border-radius: 999rpx;
-  padding: 6rpx 18rpx;
-}
-
-.dorm-hint {
-  margin-top: 10rpx;
-}
-
-.btn-dorm-bind {
-  flex-shrink: 0;
-  width: auto;
-  display: inline-block;
-  padding: 16rpx 36rpx;
-  font-size: 26rpx;
-}
-
-.btn-hover {
-  opacity: 0.8;
-}
-
-.dorm-actions {
-  display: flex;
-  gap: 16rpx;
-  margin-top: 24rpx;
-}
-
-.dorm-actions .btn-ghost {
-  width: auto;
-  display: inline-block;
-}
-
-.dorm-unbind {
-  color: #d64545;
-  background: #fdf2f2;
-}
-
-/* ---------- 用电概览 ---------- */
-
-.balance-main {
-  text-align: center;
-  padding: 20rpx 0 28rpx;
-}
-
-.balance-num {
-  font-size: 84rpx;
-  font-weight: 700;
-  color: #6b5ce7;
-  line-height: 1.2;
-}
-
-.stat-row {
+.now-row {
   display: flex;
   gap: 16rpx;
 }
 
-.stat {
+.now-cell {
   flex: 1;
   min-width: 0;
   background: #f7f8fc;
-  border-radius: 16rpx;
-  padding: 20rpx 12rpx;
+  border-radius: 20rpx;
+  padding: 28rpx 20rpx;
   text-align: center;
 }
 
-.stat-num {
-  font-size: 32rpx;
+.now-num {
+  font-size: 56rpx;
   font-weight: 700;
-  margin-bottom: 4rpx;
+  color: #6b5ce7;
+  line-height: 1.2;
+  margin-bottom: 8rpx;
 }
 
-.balance-foot {
-  margin-top: 24rpx;
+.diff {
+  margin-top: 20rpx;
   text-align: center;
-  font-size: 22rpx;
-  line-height: 1.6;
 }
 
-/* ---------- 绑定面板 ---------- */
+/* ---------- 录入 ---------- */
 
-.mask {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(20, 22, 34, 0.45);
+.input-row {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 100;
-}
-
-.panel {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 36rpx 36rpx 0 0;
-  padding: 40rpx 40rpx 56rpx;
-  box-sizing: border-box;
-}
-
-.panel-head {
+  gap: 16rpx;
   margin-bottom: 24rpx;
 }
 
-.panel-title {
-  font-size: 34rpx;
-  font-weight: 700;
+.input-cell {
+  flex: 1;
+  min-width: 0;
 }
 
-.panel-close {
-  color: #9aa0ac;
-  font-size: 36rpx;
-  padding: 0 8rpx;
-}
-
-/* 步骤条 */
-
-.stepbar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10rpx;
+.input {
+  width: 100%;
   background: #f7f8fc;
-  border-radius: 16rpx;
-  padding: 16rpx 20rpx;
-  margin-bottom: 20rpx;
+  border-radius: 18rpx;
+  padding: 20rpx 24rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  margin-top: 12rpx;
 }
 
-.step-chip {
-  font-size: 24rpx;
-  color: #9aa0ac;
-  padding: 8rpx 18rpx;
-  border-radius: 999rpx;
-}
-
-.step-on {
-  color: #ffffff;
-  background: #6b5ce7;
-  font-weight: 600;
-}
-
-.step-done {
-  color: #6b5ce7;
-}
-
-.step-arrow {
-  color: #c8ccd8;
-  font-size: 24rpx;
-}
-
-/* 选项列表 */
-
-.opt-list {
-  height: 520rpx;
-}
-
-.opt-tip {
+.why-tip {
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  line-height: 1.7;
   text-align: center;
-  padding: 60rpx 0;
 }
 
-.opt-row {
+/* ---------- 历史 ---------- */
+
+.rec-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 26rpx 8rpx;
-  font-size: 29rpx;
+  padding: 22rpx 0;
   border-top: 1rpx solid #f0f1f5;
 }
 
-.opt-row:first-child {
+.rec-row:first-of-type {
   border-top: none;
 }
 
-.opt-row-hover {
-  background: #f7f8fc;
+.rec-body {
+  flex: 1;
+  min-width: 0;
 }
 
-.opt-arrow {
-  color: #c8ccd8;
-  font-size: 34rpx;
+.rec-main {
+  font-size: 29rpx;
+  font-weight: 500;
+  margin-bottom: 4rpx;
 }
 
-.panel-submit {
-  margin-top: 24rpx;
+.rec-del {
+  font-size: 20rpx;
+  flex-shrink: 0;
+  padding-left: 16rpx;
 }
